@@ -10,17 +10,21 @@ def main(robotIP, PORT=9559):
         # Включение робота
         motionProxy.wakeUp()
 
-        # Переход в положение "планка"
-        names = ["RShoulderPitch", "LShoulderPitch", "RKneePitch", "LKneePitch"]
-        angles = [-1.5, -1.5, 0.9, 0.9]  # Руки вперед, ноги согнуты
-        times = [1.0, 1.0, 1.0, 1.0]
+        # Установим начальную стойку (StandInit)
+        postureProxy.goToPosture("StandInit", 1.0)
+
+        # Переход в планку (наклон вперёд, вытягивание рук)
+        # Поднимаем руки вперёд и наклоняем корпус
+        names = ["RShoulderPitch", "LShoulderPitch", "HipPitch", "RKneePitch", "LKneePitch"]
+        angles = [-1.5, -1.5, -0.5, 0.5, 0.5]  # Руки вперёд, корпус наклонён, колени согнуты
+        times = [2.0, 2.0, 2.0, 2.0, 2.0]
         motionProxy.angleInterpolation(names, angles, times, True)
 
-        # Удерживаем позицию 5 секунд
-        time.sleep(5)
+        # Удержание позиции планки
+        time.sleep(3)  # Удерживаем планку 3 секунды
 
-        # Возвращение в стойку
-        postureProxy.goToPosture("StandInit", 1.0)
+        # Возвращение в начальную стойку (StandInit)
+        postureProxy.goToPosture("StandInit", 1.5)
 
         # Отключение робота
         motionProxy.rest()
@@ -29,5 +33,6 @@ def main(robotIP, PORT=9559):
         print("Ошибка: ", e)
 
 if __name__ == "__main__":
-    robotIP = "169.254.205.101"  # IP-адрес твоего NAO
-    main(robotIP)
+    robotIP = "127.0.0.1"  # IP-адрес твоего NAO
+    PORT = 9559
+    main(robotIP, PORT)
