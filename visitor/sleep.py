@@ -1,38 +1,50 @@
 from naoqi import ALProxy
 import time
 
-def robot_sleep_sitting(robotIP, PORT=9559):
-    try:
-        # Прокси для управления движениями и позами
-        motionProxy = ALProxy("ALMotion", robotIP, PORT)
-        postureProxy = ALProxy("ALRobotPosture", robotIP, PORT)
-        ledsProxy = ALProxy("ALLeds", robotIP, PORT)
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
 
-        # Включение робота
-        motionProxy.wakeUp()
+    def robot_sleep_sitting(self, robotIP, PORT=9559):
+        try:
+            # Прокси для управления движениями и позами
+            motionProxy = ALProxy("ALMotion", robotIP, PORT)
+            postureProxy = ALProxy("ALRobotPosture", robotIP, PORT)
+            ledsProxy = ALProxy("ALLeds", robotIP, PORT)
 
-        # Переход в сидячую позу
-        postureProxy.goToPosture("Sit", 1.0)
+            # Включение робота
+            motionProxy.wakeUp()
 
-        # Уменьшаем интенсивность "глаз", чтобы имитировать закрытие глаз
-        ledsProxy.fadeRGB("FaceLeds", 0x000000, 1.0)  # Отключаем глаза, имитируя сон
+            # Переход в сидячую позу
+            postureProxy.goToPosture("Sit", 1.0)
 
-        # Имитация сна (робот сидит с пониженной активностью)
-        time.sleep(5)  # Удерживаем позу "сна" 5 секунд
+            # Уменьшаем интенсивность "глаз", чтобы имитировать закрытие глаз
+            ledsProxy.fadeRGB("FaceLeds", 0x000000, 1.0)  # Отключаем глаза, имитируя сон
 
-        # Возвращаем глаза в исходное состояние (робот "просыпается")
-        ledsProxy.fadeRGB("FaceLeds", 0xFFFFFF, 1.0)  # Включаем глаза снова
+            # Имитация сна (робот сидит с пониженной активностью)
+            time.sleep(5)  # Удерживаем позу "сна" 5 секунд
 
-        # Возвращение в начальную стойку (StandInit)
-        postureProxy.goToPosture("StandInit", 1.0)
+            # Возвращаем глаза в исходное состояние (робот "просыпается")
+            ledsProxy.fadeRGB("FaceLeds", 0xFFFFFF, 1.0)  # Включаем глаза снова
 
-        # Отключение робота
-        motionProxy.rest()
+            # Возвращение в начальную стойку (StandInit)
+            postureProxy.goToPosture("StandInit", 1.0)
 
-    except Exception as e:
-        print("Error: ", e)
+            # Отключение робота
+            motionProxy.rest()
 
-if __name__ == "__main__":
-    robotIP = "127.0.0.1"  # IP-адрес вашего NAO
-    PORT = 9559
-    robot_sleep_sitting(robotIP, PORT)
+        except Exception as e:
+            print("Error: ", e)
+
+    def onUnload(self):
+        pass
+
+    def onInput_onStart(self):
+        robotIP = "169.254.118.220"  # IP-адрес вашего NAO
+        PORT = 9559
+        self.robot_sleep_sitting(robotIP, PORT)
+        self.onStopped()  # Завершение выполнения блока
+
+    def onInput_onStop(self):
+        self.onUnload()
+        self.onStopped()  # Завершение выполнения блока
