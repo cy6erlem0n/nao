@@ -18,7 +18,7 @@ class MyClass(GeneratedClass):
         print("Получен порт:", self.receivedPort)
 
     # Сигнал для начала работы
-    def onStart(self):
+    def onInput_onStart(self):
         if self.receivedIP and self.receivedPort:
             print("Инициализация работы с IP и портом")
             try:

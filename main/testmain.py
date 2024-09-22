@@ -21,10 +21,7 @@ class MyClass(GeneratedClass):
             # Отправляем IP и порт в другие блоки через выходные сигналы
             self.output_IP(robotIP)  # Отправляем IP
             self.output_port(port)   # Отправляем порт
-            time.sleep(1)
-            # Отправляем сигнал на запуск второго блока
-            self.output()  # Этот сигнал должен быть подключен ко входу второго блока
-            
+            time.sleep(1)            
             # Завершаем работу блока
             self.onStopped()
         else:
