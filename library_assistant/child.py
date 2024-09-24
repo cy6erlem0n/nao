@@ -8,11 +8,9 @@ class MyClass(GeneratedClass):
 
     def onInput_IP(self, value):
         self.robotIP = value
-        print("Received IP in child block:", self.robotIP)
 
     def onInput_port(self, value):
         self.port = value
-        print("Received port in child block:", self.port)
 
     def onInput_onSignal(self):
         if self.robotIP is None or self.port is None:
