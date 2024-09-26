@@ -6,8 +6,8 @@ class MyClass(GeneratedClass):
         GeneratedClass.__init__(self)
         self.receivedIP = None
         self.receivedPort = None
-        self.bIsRunning = False  # Флаг состояния работы
-
+    def onLoad(self):
+        self.bIsRunning = False
     # Прием IP
     def onInput_IP(self, ip):
         self.receivedIP = ip
@@ -25,6 +25,7 @@ class MyClass(GeneratedClass):
     # Сигнал для начала работы
     def onInput_onStart(self):
         print("[INFO] Запуск onInput_onStart")
+        time.sleep(1)
         
         if self.bIsRunning:
             print("[WARNING] Блок уже работает")
@@ -49,13 +50,6 @@ class MyClass(GeneratedClass):
                 print("[INFO] Сброс состояния bIsRunning")
         else:
             print("[ERROR] IP или порт не были получены! IP: {}, Порт: {}".format(self.receivedIP, self.receivedPort))
-
-    def onInput_onStop(self):
-        print("[INFO] Остановка блока")
-        if self.bIsRunning:
-            print("[INFO] Остановка текущей работы")
-            self.bIsRunning = False
-            self.onUnload()
 
     def onUnload(self):
         print("[INFO] Разгрузка блока")
