@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ChoregrapheProject xmlns="http://www.ald.softbankrobotics.com/schema/choregraphe/project.xsd" xar_version="3">
+  <Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0">
+    <bitmap>media/images/box/root.png</bitmap>
+    <script language="4">
+      <content>
+        <![CDATA[]]>
+      </content>
+    </script>
+    <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+    <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+    <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+    <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+    <Timeline enable="0">
+      <BehaviorLayer name="behavior_layer1">
+        <BehaviorKeyframe name="keyframe1" index="1">
+          <Diagram scale="70.7107">
+            <Box name="main" id="5" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="444" y="204">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import time
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+
+    def onInput_onStart(self):
+        robotIP = self.getParameter("robotIP")  # Получаем IP из Edit Box
+        PORT = self.getParameter("port")  # Получаем порт из Edit Box
+
+        self.ask_for_age(robotIP, PORT)  # Запрашиваем возраст
+
+    def ask_for_age(self, robotIP, PORT):
+        try:
+            # Приветствие и настройка для прослушивания возраста
+            tts = ALProxy("ALTextToSpeech", robotIP, int(PORT))
+            asr = ALProxy("ALSpeechRecognition", robotIP, int(PORT))
+            memory = ALProxy("ALMemory", robotIP, int(PORT))
+
+            tts.say("Please tell me your age or your age group, like child, teenager, or adult.")
+            time.sleep(2)  # Пауза, чтобы NAO не слышал свою речь
+
+            asr.setLanguage("English")
+            vocabulary = ["10", "20", "30", "40", "50", "teenager", "child", "adult"]
+            asr.setVocabulary(vocabulary, False)
+            asr.subscribe("AgeListener")
+
+            time.sleep(5)  # Ожидание ответа
+            data = memory.getData("WordRecognized")
+            asr.unsubscribe("AgeListener")
+
+            if data and len(data) > 0:
+                age_group = data[0]
+                self.route_based_on_age(age_group)  # Передаем возрастную группу
+            else:
+                tts.say("I couldn't recognize your age, please repeat.")
+                self.ask_for_age(robotIP, PORT)  # Повторяем запрос, если возраст не распознан
+        except Exception as e:
+            print("Error occurred: ", e)
+
+    def route_based_on_age(self, age_group):
+        # Отправка IP и порта в другие блоки
+        self.output_IP(self.getParameter("robotIP"))
+        self.output_port(self.getParameter("port"))
+
+        # Убедимся, что параметры переданы, добавив паузу
+        time.sleep(1)
+
+        # Логика маршрутизации по возрастным группам
+        if age_group in ["child", "10"]:
+            print("Routing to child block")
+            self.output_child()  # Переход в блок для детей
+        elif age_group in ["teenager", "20"]:
+            print("Routing to teenager block")
+            self.output_teenager()  # Переход в блок для подростков
+        elif age_group in ["adult", "30", "40", "50"]:
+            print("Routing to adult block")
+            self.output_adult()  # Переход в блок для взрослых
+        else:
+            print("Couldn't recognize the age group, asking again.")
+            self.ask_for_age(self.getParameter("robotIP"), self.getParameter("port"))  # Переспрашиваем, если возраст не распознан]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="output_child" type="1" type_size="1" nature="1" inner="0" tooltip="" id="4" />
+              <Output name="output_teenager" type="1" type_size="1" nature="1" inner="0" tooltip="" id="5" />
+              <Output name="output_adult" type="1" type_size="1" nature="1" inner="0" tooltip="" id="6" />
+              <Output name="output_IP" type="3" type_size="1" nature="1" inner="0" tooltip="" id="7" />
+              <Output name="output_port" type="2" type_size="1" nature="1" inner="0" tooltip="" id="8" />
+              <Parameter name="robotIP" inherits_from_parent="0" content_type="3" value="169.254.225.69" default_value="169.254.60.127" custom_choice="0" tooltip="" id="9" />
+              <Parameter name="port" inherits_from_parent="0" content_type="1" value="9559" default_value="9559" min="0" max="90000" tooltip="" id="10" />
+            </Box>
+            <Box name="teenager" id="1" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="669" y="180">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+
+    def onInput_onStart(self):
+        robotIP = "169.254.205.101"  # IP-адрес NAO
+        PORT = 9559
+
+        try:
+            tts = ALProxy("ALTextToSpeech", robotIP, PORT)
+            tts.say("For teenagers, I recommend checking out science fiction and fantasy novels!")
+        except Exception as e:
+            print("Error occurred: ", e)
+
+        self.onStopped()  # Завершение блока]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onInput_port" type="2" type_size="1" nature="1" inner="0" tooltip="" id="3" />
+              <Input name="onInput_IP" type="3" type_size="1" nature="1" inner="0" tooltip="" id="4" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="5" />
+            </Box>
+            <Box name="child" id="3" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="669" y="31">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.robotIP = None
+        self.port = None
+
+    def onInput_IP(self, onInput_IP):
+        self.robotIP = value
+        print("Received IP in child block:", self.robotIP)
+
+    def onInput_port(self, onInput_port):
+        self.port = value
+        print("Received port in child block:", self.port)
+
+    def onInput_onSignal(self):
+        if self.robotIP is None or self.port is None:
+            print("IP or port not set in child block!")
+            return
+
+        try:
+            tts = ALProxy("ALTextToSpeech", self.robotIP, self.port)
+            tts.say("For children, I recommend checking out fairy tales and adventure books!")
+        except Exception as e:
+            print("Error in child block:", e)
+
+        self.onStopped()]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onSignal" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onInput_IP" type="3" type_size="1" nature="2" inner="0" tooltip="" id="3" />
+              <Input name="onInput_port" type="2" type_size="1" nature="2" inner="0" tooltip="" id="4" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="5" />
+            </Box>
+            <Box name="adult" id="4" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="670" y="311">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+
+    def onInput_onStart(self):
+        robotIP = "169.254.205.101"  # IP-адрес NAO
+        PORT = 9559
+
+        try:
+            tts = ALProxy("ALTextToSpeech", robotIP, PORT)
+            tts.say("For adults, I recommend checking out fiction, non-fiction, and self-help books!")
+        except Exception as e:
+            print("Error occurred: ", e)
+
+        self.onStopped()  # Завершение блока]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Box name="main (1)" id="2" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="386" y="391">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import logging
+import time  # Для добавления паузы
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        logging.basicConfig(level=logging.DEBUG)
+
+    def onInput_onStart(self):
+        # Получаем IP и порт из параметров (Edit Box в Choregraphe)
+        robotIP = self.getParameter("robotIP")
+        port = self.getParameter("port")
+
+        # Проверяем, что параметры не пустые
+        if robotIP and port:
+            try:
+                # Логируем перед отправкой сигналов
+                logging.debug("Отправляем IP: %s", robotIP)
+                logging.debug("Отправляем порт: %d", port)
+
+                # Отправляем IP и порт во второй блок через выходные сигналы
+                self.output_IP(robotIP)  # Отправляем IP
+                self.output_port(port)   # Отправляем порт
+
+                # Пауза перед сигналом завершения, чтобы обеспечить передачу IP и порта
+                time.sleep(1)  # Задержка на 1 секунду
+
+                # Логируем завершение работы
+                logging.debug("Сигнал завершения работы отправлен")
+
+                # Отправляем сигнал для начала работы второго блока
+                self.onStopped()  # Завершение работы первого блока
+            except Exception as e:
+                logging.error("Ошибка при отправке IP и порта: %s", str(e))
+                self.onStopped()  # Завершаем работу блока, даже если есть ошибка
+        else:
+            logging.error("IP или порт пустые, сигналы не отправляются")
+            self.onStopped()  # Завершаем блок, даже если параметры не корректны]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="" id="4" />
+              <Output name="output_IP" type="3" type_size="1" nature="1" inner="0" tooltip="" id="5" />
+              <Output name="output_port" type="2" type_size="1" nature="1" inner="0" tooltip="" id="6" />
+              <Parameter name="robotIP" inherits_from_parent="0" content_type="3" value="169.254.225.69" default_value="169.254.60.127" custom_choice="0" tooltip="" id="7" />
+              <Parameter name="port" inherits_from_parent="0" content_type="1" value="9559" default_value="9559" min="0" max="90000" tooltip="" id="8" />
+            </Box>
+            <Box name="child (1)" id="6" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="906" y="681">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import time
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.receivedIP = None
+        self.receivedPort = None
+
+    # Прием IP
+    def onInput_IP(self, ip):
+        self.receivedIP = ip
+        print("Получен IP:", self.receivedIP)
+
+    # Прием порта
+    def onInput_port(self, port):
+        self.receivedPort = port
+        print("Получен порт:", self.receivedPort)
+
+    # Сигнал для начала работы
+    def onStart(self):
+        if self.receivedIP and self.receivedPort:
+            print("Инициализация работы с IP и портом")
+            try:
+                # Тут можно делать любые операции с IP и портом
+                print("Работаем с IP:", self.receivedIP)
+                print("Работаем с портом:", self.receivedPort)
+
+                # Дополнительные действия (например, подключение к роботу)
+                # proxy = ALProxy("SomeService", self.receivedIP, self.receivedPort)
+
+                # Логируем успешное завершение работы блока
+                self.onStopped()  # Завершение блока
+            except Exception as e:
+                print("Ошибка при работе с IP и портом:", e)
+        else:
+            print("IP или порт не были получены!")]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onInput_IP" type="3" type_size="1" nature="2" inner="0" tooltip="" id="3" />
+              <Input name="onInput_port" type="2" type_size="1" nature="2" inner="0" tooltip="" id="4" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="5" />
+            </Box>
+            <Box name="Say" id="7" localization="8" tooltip="Say some text. The text can be localized." x="171" y="663">
+              <bitmap>media/images/box/interaction/say.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[import time
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self, False)
+
+    def onLoad(self):
+        self.tts = self.session().service('ALTextToSpeech')
+        self.ttsStop = self.session().service('ALTextToSpeech') #Create another service as wait is blocking if audioout is remote
+        self.bIsRunning = False
+        self.ids = []
+
+    def onUnload(self):
+        for id in self.ids:
+            try:
+                self.ttsStop.stop(id)
+            except:
+                pass
+        while( self.bIsRunning ):
+            time.sleep( 0.2 )
+
+    def onInput_onStart(self):
+        self.bIsRunning = True
+        try:
+            sentence = "\RSPD="+ str( self.getParameter("Speed (%)") ) + "\ "
+            sentence += "\VCT="+ str( self.getParameter("Voice shaping (%)") ) + "\ "
+            sentence += self.getParameter("Text")
+            sentence +=  "\RST\ "
+            id = self.tts.pCall("say",str(sentence))
+            self.ids.append(id)
+            self.tts.wait(id)
+        finally:
+            try:
+                self.ids.remove(id)
+            except:
+                pass
+            if( self.ids == [] ):
+                self.onStopped() # activate output of the box
+                self.bIsRunning = False
+
+    def onInput_onStop(self):
+        self.onUnload()]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this Input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this Input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when Box behavior is finished." id="4" />
+              <Parameter name="Voice shaping (%)" inherits_from_parent="1" content_type="1" value="100" default_value="100" min="50" max="150" tooltip='Used to modify at runtime the voice feature (tone, speed). In a slighty&#x0A;different way than pitch and speed, it gives a kind of &quot;gender or age&#x0A;modification&quot; effect.&#x0A;&#x0A;For instance, a quite good male derivation of female voice can be&#x0A;obtained setting this parameter to 78%.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the&#x0A;speed parameter. For example, if you want to decrease by 20% the voice&#x0A;shaping, you will have to increase by 20% the speed to keep a constant&#x0A;average speed.' id="5" />
+              <Parameter name="Speed (%)" inherits_from_parent="1" content_type="1" value="100" default_value="100" min="50" max="200" tooltip="Changes the speed of the voice.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the voice&#x0A;shaping parameter. For example, if you want to increase by 20% the speed, you&#x0A;will have to decrease by 20% the voice shaping to keep a constant average&#x0A;speed." id="6" />
+              <Parameter name="Text" inherits_from_parent="0" content_type="5" value="مرحبا" default_value="" tooltip="The text you want to say. Don&apos;t forget to translate it!" id="7" />
+              <Resource name="Speech" type="Lock" timeout="0" />
+            </Box>
+            <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="5" />
+            <Link inputowner="0" indexofinput="4" outputowner="3" indexofoutput="5" />
+            <Link inputowner="0" indexofinput="4" outputowner="4" indexofoutput="4" />
+            <Link inputowner="3" indexofinput="2" outputowner="5" indexofoutput="4" />
+            <Link inputowner="1" indexofinput="2" outputowner="5" indexofoutput="5" />
+            <Link inputowner="4" indexofinput="2" outputowner="5" indexofoutput="6" />
+            <Link inputowner="3" indexofinput="3" outputowner="5" indexofoutput="7" />
+            <Link inputowner="3" indexofinput="4" outputowner="5" indexofoutput="8" />
+            <Link inputowner="6" indexofinput="2" outputowner="2" indexofoutput="4" />
+            <Link inputowner="6" indexofinput="3" outputowner="2" indexofoutput="5" />
+            <Link inputowner="6" indexofinput="4" outputowner="2" indexofoutput="6" />
+            <Link inputowner="0" indexofinput="4" outputowner="6" indexofoutput="5" />
+            <Link inputowner="2" indexofinput="2" outputowner="0" indexofoutput="2" />
+          </Diagram>
+        </BehaviorKeyframe>
+      </BehaviorLayer>
+    </Timeline>
+  </Box>
+</ChoregrapheProject>

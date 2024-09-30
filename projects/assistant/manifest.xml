@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<package uuid="assistant-f8d415" installOnlyAtStartup="false" version="0.0.0">
+ <names>
+  <name lang="en_US">Untitled</name>
+ </names>
+ <supportedLanguages>
+  <language>ar_SA</language>
+  <language>en_US</language>
+  <language>ru_RU</language>
+ </supportedLanguages>
+ <descriptionLanguages>
+  <language>en_US</language>
+  <language>ar_SA</language>
+  <language>ru_RU</language>
+ </descriptionLanguages>
+ <contents>
+  <behaviorContent path="behavior_1">
+   <userRequestable/>
+   <nature>interactive</nature>
+   <permissions/>
+  </behaviorContent>
+ </contents>
+</package>
