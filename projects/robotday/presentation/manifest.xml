@@ -1,17 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package uuid="main-c4209e" version="0.0.0" installOnlyAtStartup="false">
+<package version="0.0.0" installOnlyAtStartup="false" uuid="presentation-b0fc0d">
  <names>
   <name lang="en_US">Untitled</name>
  </names>
- <supportedLanguages>
-  <language>ar_SA</language>
-  <language>en_US</language>
-  <language>ru_RU</language>
- </supportedLanguages>
  <descriptionLanguages>
   <language>en_US</language>
-  <language>ar_SA</language>
-  <language>ru_RU</language>
+  <language>de_DE</language>
  </descriptionLanguages>
  <contents>
   <behaviorContent path="behavior_1">
