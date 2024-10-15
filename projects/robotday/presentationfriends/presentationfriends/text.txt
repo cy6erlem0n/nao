@@ -1,0 +1,11 @@
+Und nun möchte ich Ihnen meine Freunde vorstellen, die heute hier versammelt sind und die jeweils ihre eigenen Programme und 
+Spiele für Sie vorbereitet haben.
+Zu meiner Linken ist Bluebot. Bluebot hat ein lustiges Programm, bei dem ihr lernen könnt, wie man ihn programmiert und steuert.
+Als Spiel haben wir ein Labyrinth vorbereitet, das ihr zusammen mit Bluebot durchlaufen könnt.
+Daneben steht ein ClicBot, den wir Bac genannt haben. Bac ist gerne kreativ! Er ist sehr aktiv und wird mit dir ein Quiz 
+spielen.
+Zu meiner Rechten siehst du ClicBot, dessen Name Moomi ist. Mummy ist ein großer Sportler! Er wird dir einige seiner Bewegungen
+zeigen, die er selbst gelernt hat, und dann wird es spannende Rennen mit Hilfe anderer ClicBots geben 
+Und unser letztes Mitglied Dash ist ein ziemlich einfacher Roboter, aber sehr lustig und positiv.
+Jeder dieser Roboter hat etwas Einzigartiges zu bieten, und ich wünsche Ihnen viel Spaß beim Ausprobieren 
+ihrer Programme und Spiele!
