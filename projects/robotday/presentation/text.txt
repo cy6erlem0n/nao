@@ -1,5 +1,6 @@
-Herzlich willkommen zum Tag der Roboter in der Bibliothek! Heute erwartet euch ein spannender Tag voller Spaß, aktiver Programme und Spiele mit verschiedenen Robotern. 
+"Herzlich willkommen zum Tag der Roboter in der Bibliothek! Heute erwartet euch ein spannender Tag voller Spaß, aktiver Programme und Spiele mit verschiedenen Robotern. 
 
 Wir haben viele aufregende Aktivitäten für euch vorbereitet, bei denen ihr die Welt der Robotik hautnah erleben könnt. Seid bereit für Bewegung, Spaß und ganz viel Technik!
 
-Viel Spaß und auf ein tolles Erlebnis!
+Viel Spaß und auf ein tolles Erlebnis!"
+

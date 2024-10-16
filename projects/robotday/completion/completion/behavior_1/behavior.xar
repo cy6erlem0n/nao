@@ -14,8 +14,8 @@
     <Timeline enable="0">
       <BehaviorLayer name="behavior_layer1">
         <BehaviorKeyframe name="keyframe1" index="1">
-          <Diagram scale="70.7107">
-            <Box name="Stand Up" id="1" localization="8" tooltip="the robot tries to stand up from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="103" y="250">
+          <Diagram>
+            <Box name="Stand Up" id="1" localization="8" tooltip="the robot tries to stand up from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="102" y="150">
               <bitmap>media/images/box/movement/stand.png</bitmap>
               <script language="4">
                 <content>
@@ -94,72 +94,7 @@
               </Timeline>
               <Resource name="All motors" type="Lock" timeout="0" />
             </Box>
-            <Box name="Set Language" id="2" localization="8" tooltip="Set the language of your robot for the current application. Your robot will speak and understand the selected language as long as your application has focus. Any following call to ALSpeechRecognition (Speech Reco. box for instance), ALTextToSpeech (Say box for instance) or ALDialog will use this language.&#x0A;" plugin="setlanguage_plugin" x="263" y="76">
-              <bitmap>media/images/box/interaction/say.png</bitmap>
-              <script language="4">
-                <content>
-                  <![CDATA[# /!\ Generated content. Do not edit!
-# -*- coding: utf-8 -*-
-class MyClass(GeneratedClass):
-    def __init__(self):
-        GeneratedClass.__init__(self, False)
-        self.setTTS = True
-        self.setASR = True
-        self.setDialog = True
-        self.language = "German"
-
-    def getService(self, serviceName, humainName):
-        service = None
-        try:
-            service = self.session().service(serviceName)
-        except:
-            self.logger.warn("%s is not available, language setting cannot be applied to %s." % (serviceName, humainName))
-        return service
-
-    def onLoad(self):
-        if self.setTTS:
-            self.tts = self.getService("ALTextToSpeech", "speech")
-        if self.setASR:
-            self.asr = self.getService("ALSpeechRecognition", "recognition")
-        if self.setDialog:
-            self.dialog = self.getService("ALDialog", "dialog")
-
-    def setLanguage(self, service, serviceName):
-        try:
-            if service is None:
-                return False
-            service.setLanguage(self.language)
-            return True
-        except Exception as e:
-            self.logger.error("Could not set language %s for %s: %s" % (self.language, serviceName, e))
-            return False
-
-    def onInput_onSet(self):
-        res = True
-        if self.setTTS:
-            res = self.setLanguage(self.tts, "ALTextToSpeech") and res
-        if self.setASR:
-            res = self.setLanguage(self.asr, "ALSpeechRecognition") and res
-        if self.setDialog:
-            res = self.setLanguage(self.dialog, "ALDialog") and res
-
-        if res:
-            self.onReady()
-        else:
-            self.logger.error("Language %s could not be set for one or more services." % self.language)
-            self.onError()]]>
-                </content>
-              </script>
-              <pluginContent>
-                <language>German</language>
-              </pluginContent>
-              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-              <Input name="onSet" type="1" type_size="1" nature="1" inner="0" tooltip="The data is set when a signal is received on this input." id="2" />
-              <Output name="onReady" type="1" type_size="1" nature="2" inner="0" tooltip="Signal sent when the data has been set." id="3" />
-              <Output name="onError" type="3" type_size="1" nature="2" inner="0" tooltip="Error output:&#x0A;- triggered if the language asked cannot be set" id="4" />
-              <Resource name="Speech" type="Lock" timeout="0" />
-            </Box>
-            <Box name="Say Text" id="3" localization="8" tooltip="Say the text received on its input." x="865" y="86">
+            <Box name="Animated Say Text" id="2" localization="8" tooltip="Say the text received on its input and move during its speech.&#x0A;" x="486" y="129">
               <bitmap>media/images/box/interaction/say.png</bitmap>
               <script language="4">
                 <content>
@@ -170,8 +105,8 @@ class MyClass(GeneratedClass):
         GeneratedClass.__init__(self, False)
 
     def onLoad(self):
-        self.tts = self.session().service('ALTextToSpeech')
-        self.ttsStop = self.session().service('ALTextToSpeech') #Create another service as wait is blocking if audioout is remote
+        self.tts = self.session().service('ALAnimatedSpeech')
+        self.ttsStop = self.session().service('ALAnimatedSpeech') #Create another service as wait is blocking if audioout is remote
         self.bIsRunning = False
         self.ids = []
 
@@ -187,11 +122,12 @@ class MyClass(GeneratedClass):
     def onInput_onStart(self, p):
         self.bIsRunning = True
         try:
+            movement = self.getParameter("Speaking movement mode")
             sentence = "\RSPD="+ str( self.getParameter("Speed (%)") ) + "\ "
             sentence += "\VCT="+ str( self.getParameter("Voice shaping (%)") ) + "\ "
             sentence += str(p)
             sentence +=  "\RST\ "
-            id = self.tts.pCall("say",str(sentence))
+            id = self.tts.pCall("say",str(sentence), {"speakingMovementMode":movement})
             self.ids.append(id)
             self.tts.wait(id)
         finally:
@@ -213,9 +149,14 @@ class MyClass(GeneratedClass):
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when Box behavior is finished." id="4" />
               <Parameter name="Voice shaping (%)" inherits_from_parent="1" content_type="1" value="100" default_value="100" min="50" max="150" tooltip='Used to modify at runtime the voice feature (tone, speed). In a slighty&#x0A;different way than pitch and speed, it gives a kind of &quot;gender or age&#x0A;modification&quot; effect.&#x0A;&#x0A;For instance, a quite good male derivation of female voice can be&#x0A;obtained setting this parameter to 78%.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the&#x0A;speed parameter. For example, if you want to decrease by 20% the voice&#x0A;shaping, you will have to increase by 20% the speed to keep a constant&#x0A;average speed.' id="5" />
               <Parameter name="Speed (%)" inherits_from_parent="1" content_type="1" value="100" default_value="100" min="50" max="200" tooltip="Changes the speed of the voice.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the voice&#x0A;shaping parameter. For example, if you want to increase by 20% the speed, you&#x0A;will have to decrease by 20% the voice shaping to keep a constant average&#x0A;speed." id="6" />
+              <Parameter name="Speaking movement mode" inherits_from_parent="0" content_type="3" value="contextual" default_value="contextual" custom_choice="0" tooltip="Change the body language mode during the speech.&#x0A;disabled: The robot will only play the animations given by the user through the animation parameter.&#x0A;random: During time the robot has no animation to play, he will launch random neutral animations.&#x0A;contextual: During time the robot has no animation to play, he will try to launch a new one accordingly to the saying text. Every time the robot can&apos;t find a contextual animation he will launch a random neutral animation." id="7">
+                <Choice value="disabled" />
+                <Choice value="random" />
+                <Choice value="contextual" />
+              </Parameter>
               <Resource name="Speech" type="Lock" timeout="0" />
             </Box>
-            <Box name="Text Edit" id="4" localization="8" tooltip="Send the text you entered when the input is stimulated." plugin="textedit_plugin" x="541" y="139">
+            <Box name="Text Edit" id="3" localization="8" tooltip="Send the text you entered when the input is stimulated." plugin="textedit_plugin" x="229" y="60">
               <bitmap>media/images/box/interaction/vocabulary.png</bitmap>
               <script language="4">
                 <content>
@@ -225,168 +166,33 @@ class MyClass(GeneratedClass):
 		GeneratedClass.__init__(self)
 
 	def onInput_onStart(self):
-		self.onStopped("")]]>
+		self.onStopped("\"Jetzt möchte ich euch meine Freunde vorstellen, die heute hier sind und jeweils ihre eigenen Programme und Spiele für euch vorbereitet haben.\n\nAuf meiner linken Seite haben wir Bluebot. Bluebot hat ein spannendes Programm, bei dem ihr lernen könnt, wie man ihn programmiert und steuert. Als Spiel haben wir ein Labyrinth vorbereitet, das ihr gemeinsam mit Bluebot durchqueren könnt.\n\nDaneben steht ClicBot, den wir Bac nennen. Bac liebt es, kreativ zu sein! Mit Bac könnt ihr eine eigene kleine Choreografie erstellen und ihn tanzen lassen. Das Spiel mit Bac besteht darin, eine kleine Tanzshow zu programmieren.\n\nAuf meiner rechten Seite seht ihr ClicBot, der Mumi heißt. Mumi ist ein großartiger Lehrer! Er wird euch beibringen, wie man Hindernisse umgeht und intelligente Bewegungen plant. Das Spiel mit Mumi ist ein Hindernisparcours, den ihr zusammen meistern könnt.\n\nUnd schließlich Dash! Dash hat ein interaktives Programm, bei dem ihr durch einfache Befehle spannende Missionen steuern könnt. Sein Spiel ist eine Mission zur Rettung einer kleinen Roboterstadt, bei der ihr ihm helfen müsst, verschiedene Aufgaben zu lösen.\n\nJeder dieser Roboter hat etwas Einzigartiges, und ich hoffe, ihr habt viel Spaß dabei, ihre Programme und Spiele auszuprobieren!\"\n")]]>
                 </content>
               </script>
               <pluginContent>
                 <text>
-                  <![CDATA[]]>
+                  <![CDATA["Jetzt möchte ich euch meine Freunde vorstellen, die heute hier sind und jeweils ihre eigenen Programme und Spiele für euch vorbereitet haben.
+
+Auf meiner linken Seite haben wir Bluebot. Bluebot hat ein spannendes Programm, bei dem ihr lernen könnt, wie man ihn programmiert und steuert. Als Spiel haben wir ein Labyrinth vorbereitet, das ihr gemeinsam mit Bluebot durchqueren könnt.
+
+Daneben steht ClicBot, den wir Bac nennen. Bac liebt es, kreativ zu sein! Mit Bac könnt ihr eine eigene kleine Choreografie erstellen und ihn tanzen lassen. Das Spiel mit Bac besteht darin, eine kleine Tanzshow zu programmieren.
+
+Auf meiner rechten Seite seht ihr ClicBot, der Mumi heißt. Mumi ist ein großartiger Lehrer! Er wird euch beibringen, wie man Hindernisse umgeht und intelligente Bewegungen plant. Das Spiel mit Mumi ist ein Hindernisparcours, den ihr zusammen meistern könnt.
+
+Und schließlich Dash! Dash hat ein interaktives Programm, bei dem ihr durch einfache Befehle spannende Missionen steuern könnt. Sein Spiel ist eine Mission zur Rettung einer kleinen Roboterstadt, bei der ihr ihm helfen müsst, verschiedene Aufgaben zu lösen.
+
+Jeder dieser Roboter hat etwas Einzigartiges, und ich hoffe, ihr habt viel Spaß dabei, ihre Programme und Spiele auszuprobieren!"
+]]>
                 </text>
               </pluginContent>
               <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
               <Input name="onStart" type="1" type_size="1" nature="1" inner="0" tooltip="To send the text on the output." id="2" />
               <Output name="onStopped" type="3" type_size="1" nature="2" inner="0" tooltip="The text you entered." id="3" />
             </Box>
-            <Box name="WideGatherBothHandsOnChest_LeanRight_01" id="54" localization="8" tooltip="ID : #01C 0035&#x0A;&#x0A;===================&#x0A;&#x0A;Tags : &#x0A;-&#x0A;-&#x0A;&#x0A;===================&#x0A;&#x0A;Common dialog : Yes&#x0A;&#x0A;===================&#x0A;&#x0A;Start stance : Flex&#x0A;End stance : LeanRight" x="485" y="332">
-              <bitmap>media/images/box/movement/move.png</bitmap>
-              <script language="4">
-                <content>
-                  <![CDATA[]]>
-                </content>
-              </script>
-              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
-              <Timeline enable="1" fps="25" start_frame="1" end_frame="-1" size="39">
-                <BehaviorLayer name="behavior_layer1">
-                  <BehaviorKeyframe name="keyframe5" index="5">
-                    <Diagram />
-                  </BehaviorKeyframe>
-                </BehaviorLayer>
-                <ActuatorList model="">
-                  <ActuatorCurve name="value" actuator="HeadPitch" mute="0" unit="0">
-                    <Key frame="17" value="10.1051" />
-                    <Key frame="28" value="-10.0221" />
-                    <Key frame="39" value="-10.0221" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="HeadYaw" mute="0" unit="0">
-                    <Key frame="17" value="4.04062" />
-                    <Key frame="28" value="-0.00240423" />
-                    <Key frame="39" value="-0.00240423" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LAnklePitch" mute="0" unit="0">
-                    <Key frame="14" value="-15.6471" />
-                    <Key frame="25" value="-7.91266" />
-                    <Key frame="36" value="-8.17634" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LAnkleRoll" mute="0" unit="0">
-                    <Key frame="36" value="-7.64417" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LElbowRoll" mute="0" unit="0">
-                    <Key frame="26" value="-85.5163" />
-                    <Key frame="37" value="-85.5163" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LElbowYaw" mute="0" unit="0">
-                    <Key frame="14" value="-97.2" />
-                    <Key frame="26" value="-48.5186" />
-                    <Key frame="37" value="-48.5186" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LHand" mute="0" unit="1">
-                    <Key frame="7" value="0.53" />
-                    <Key frame="26" value="0.8312" />
-                    <Key frame="37" value="0.6" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LHipPitch" mute="0" unit="0">
-                    <Key frame="14" value="-5.18321" />
-                    <Key frame="25" value="0.793436" />
-                    <Key frame="36" value="1.67234" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LHipRoll" mute="0" unit="0">
-                    <Key frame="36" value="8.87946" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LHipYawPitch" mute="0" unit="0">
-                    <Key frame="14" value="-10.193" />
-                    <Key frame="25" value="-10.7204" />
-                    <Key frame="36" value="-10.193" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LKneePitch" mute="0" unit="0">
-                    <Key frame="14" value="27.7714" />
-                    <Key frame="25" value="14.3239" />
-                    <Key frame="36" value="15.5544" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LShoulderPitch" mute="0" unit="0">
-                    <Key frame="26" value="53.3987" />
-                    <Key frame="37" value="55.0987" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LShoulderRoll" mute="0" unit="0">
-                    <Key frame="14" value="11.1" smooth="1" symmetrical="1">
-                      <Tangent side="left" interpType="bezier" abscissaParam="-4.49354" ordinateParam="6.34287" />
-                      <Tangent side="right" interpType="bezier" abscissaParam="3.8516" ordinateParam="-5.43675" />
-                    </Key>
-                    <Key frame="26" value="-3.95753" />
-                    <Key frame="37" value="-3.95753" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="LWristYaw" mute="0" unit="0">
-                    <Key frame="14" value="-34.2" />
-                    <Key frame="26" value="-2.99072" />
-                    <Key frame="37" value="-2.99072" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RAnklePitch" mute="0" unit="0">
-                    <Key frame="14" value="-13.8845" />
-                    <Key frame="25" value="-4.56796" />
-                    <Key frame="36" value="-5.88634" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RAnkleRoll" mute="0" unit="0">
-                    <Key frame="36" value="-0.700723" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RElbowRoll" mute="0" unit="0">
-                    <Key frame="25" value="87.191" />
-                    <Key frame="36" value="87.191" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RElbowYaw" mute="0" unit="0">
-                    <Key frame="13" value="88.2" />
-                    <Key frame="25" value="56.3362" />
-                    <Key frame="36" value="56.3362" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RHand" mute="0" unit="1">
-                    <Key frame="13" value="0.86" />
-                    <Key frame="25" value="0.342" />
-                    <Key frame="36" value="0.342" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RHipPitch" mute="0" unit="0">
-                    <Key frame="14" value="-8.70368" />
-                    <Key frame="25" value="2.81013" />
-                    <Key frame="36" value="2.63435" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RHipRoll" mute="0" unit="0">
-                    <Key frame="36" value="3.86964" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RHipYawPitch" mute="0" unit="0">
-                    <Key frame="14" value="-10.193" />
-                    <Key frame="25" value="-10.7204" />
-                    <Key frame="36" value="-10.193" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RKneePitch" mute="0" unit="0">
-                    <Key frame="14" value="28.4793" />
-                    <Key frame="25" value="9.14314" />
-                    <Key frame="36" value="11.9557" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RShoulderPitch" mute="0" unit="0">
-                    <Key frame="25" value="53.3987" />
-                    <Key frame="36" value="55.0987" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RShoulderRoll" mute="0" unit="0">
-                    <Key frame="25" value="5.48945" />
-                    <Key frame="36" value="7.3805" />
-                  </ActuatorCurve>
-                  <ActuatorCurve name="value" actuator="RWristYaw" mute="0" unit="0">
-                    <Key frame="13" value="34.2" />
-                    <Key frame="25" value="-2.99072" />
-                    <Key frame="36" value="-2.99072" />
-                  </ActuatorCurve>
-                </ActuatorList>
-              </Timeline>
-              <Resource name="Standing" type="Lock" timeout="1" />
-              <Resource name="All motors" type="Lock" timeout="1" />
-            </Box>
-            <Link inputowner="3" indexofinput="2" outputowner="4" indexofoutput="3" />
-            <Link inputowner="4" indexofinput="2" outputowner="2" indexofoutput="3" />
-            <Link inputowner="4" indexofinput="2" outputowner="2" indexofoutput="4" />
-            <Link inputowner="0" indexofinput="4" outputowner="3" indexofoutput="4" />
             <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
-            <Link inputowner="54" indexofinput="2" outputowner="1" indexofoutput="4" />
-            <Link inputowner="0" indexofinput="4" outputowner="54" indexofoutput="4" />
+            <Link inputowner="3" indexofinput="2" outputowner="1" indexofoutput="4" />
+            <Link inputowner="2" indexofinput="2" outputowner="3" indexofoutput="3" />
+            <Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

@@ -1,11 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package uuid="completion-edcde0" version="0.0.0" installOnlyAtStartup="false">
+<package installOnlyAtStartup="false" version="0.0.0" uuid="completion-5fab42">
  <names>
   <name lang="en_US">Untitled</name>
  </names>
+ <supportedLanguages>
+  <language>en_US</language>
+ </supportedLanguages>
  <descriptionLanguages>
   <language>en_US</language>
-  <language>de_DE</language>
  </descriptionLanguages>
  <contents>
   <behaviorContent path="behavior_1">
