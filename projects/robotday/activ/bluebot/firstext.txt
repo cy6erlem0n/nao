@@ -1,0 +1,5 @@
+Für alle, die gerne rätseln und Herausforderungen lieben, haben wir den BlueBot-Labyrinth-Parcours! Diese Aktivität ist den ganzen Tag über verfügbar, und jeder von euch hat die Möglichkeit, den BlueBot durch den Labyrinth zu steuern.
+
+Euer Ziel ist es, den Ausgang des Labyrinths zu finden, indem ihr den BlueBot programmiert, damit er die richtigen Wege nimmt. Es ist eine großartige Gelegenheit, eure Fähigkeiten im Programmieren zu testen und Spaß dabei zu haben!
+
+Wer schafft es, den BlueBot sicher und schnell aus dem Labyrinth zu führen? Viel Erfolg und probiert es aus, wann immer ihr wollt!

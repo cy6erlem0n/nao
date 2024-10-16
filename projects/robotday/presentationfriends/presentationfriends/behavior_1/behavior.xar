@@ -198,6 +198,7 @@ Gemeinsam sind wir ein starkes Team!"
             <Link inputowner="0" indexofinput="4" outputowner="3" indexofoutput="4" />
             <Link inputowner="3" indexofinput="2" outputowner="4" indexofoutput="3" />
             <Link inputowner="2" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="4" indexofinput="2" outputowner="0" indexofoutput="2" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

@@ -166,23 +166,16 @@ class MyClass(GeneratedClass):
 		GeneratedClass.__init__(self)
 
 	def onInput_onStart(self):
-		self.onStopped("\"Jetzt möchte ich euch meine Freunde vorstellen, die heute hier sind und jeweils ihre eigenen Programme und Spiele für euch vorbereitet haben.\n\nAuf meiner linken Seite haben wir Bluebot. Bluebot hat ein spannendes Programm, bei dem ihr lernen könnt, wie man ihn programmiert und steuert. Als Spiel haben wir ein Labyrinth vorbereitet, das ihr gemeinsam mit Bluebot durchqueren könnt.\n\nDaneben steht ClicBot, den wir Bac nennen. Bac liebt es, kreativ zu sein! Mit Bac könnt ihr eine eigene kleine Choreografie erstellen und ihn tanzen lassen. Das Spiel mit Bac besteht darin, eine kleine Tanzshow zu programmieren.\n\nAuf meiner rechten Seite seht ihr ClicBot, der Mumi heißt. Mumi ist ein großartiger Lehrer! Er wird euch beibringen, wie man Hindernisse umgeht und intelligente Bewegungen plant. Das Spiel mit Mumi ist ein Hindernisparcours, den ihr zusammen meistern könnt.\n\nUnd schließlich Dash! Dash hat ein interaktives Programm, bei dem ihr durch einfache Befehle spannende Missionen steuern könnt. Sein Spiel ist eine Mission zur Rettung einer kleinen Roboterstadt, bei der ihr ihm helfen müsst, verschiedene Aufgaben zu lösen.\n\nJeder dieser Roboter hat etwas Einzigartiges, und ich hoffe, ihr habt viel Spaß dabei, ihre Programme und Spiele auszuprobieren!\"\n")]]>
+		self.onStopped("Liebe Gäste, unser Tag der Roboter neigt sich dem Ende zu. Ich hoffe, ihr hattet viel Spaß und konntet viele spannende Dinge \nüber Roboter lernen.\nVielen Dank, dass ihr heute hier wart und an unseren Programmen und Spielen teilgenommen habt. Eure Neugier und Begeisterung \nhaben diesen Tag besonders gemacht!\nIch wünsche euch alles Gute und hoffe, euch bald wieder hier in der Bibliothek zu sehen. Macht\'s gut und bis zum nächsten Mal!")]]>
                 </content>
               </script>
               <pluginContent>
                 <text>
-                  <![CDATA["Jetzt möchte ich euch meine Freunde vorstellen, die heute hier sind und jeweils ihre eigenen Programme und Spiele für euch vorbereitet haben.
-
-Auf meiner linken Seite haben wir Bluebot. Bluebot hat ein spannendes Programm, bei dem ihr lernen könnt, wie man ihn programmiert und steuert. Als Spiel haben wir ein Labyrinth vorbereitet, das ihr gemeinsam mit Bluebot durchqueren könnt.
-
-Daneben steht ClicBot, den wir Bac nennen. Bac liebt es, kreativ zu sein! Mit Bac könnt ihr eine eigene kleine Choreografie erstellen und ihn tanzen lassen. Das Spiel mit Bac besteht darin, eine kleine Tanzshow zu programmieren.
-
-Auf meiner rechten Seite seht ihr ClicBot, der Mumi heißt. Mumi ist ein großartiger Lehrer! Er wird euch beibringen, wie man Hindernisse umgeht und intelligente Bewegungen plant. Das Spiel mit Mumi ist ein Hindernisparcours, den ihr zusammen meistern könnt.
-
-Und schließlich Dash! Dash hat ein interaktives Programm, bei dem ihr durch einfache Befehle spannende Missionen steuern könnt. Sein Spiel ist eine Mission zur Rettung einer kleinen Roboterstadt, bei der ihr ihm helfen müsst, verschiedene Aufgaben zu lösen.
-
-Jeder dieser Roboter hat etwas Einzigartiges, und ich hoffe, ihr habt viel Spaß dabei, ihre Programme und Spiele auszuprobieren!"
-]]>
+                  <![CDATA[Liebe Gäste, unser Tag der Roboter neigt sich dem Ende zu. Ich hoffe, ihr hattet viel Spaß und konntet viele spannende Dinge 
+über Roboter lernen.
+Vielen Dank, dass ihr heute hier wart und an unseren Programmen und Spielen teilgenommen habt. Eure Neugier und Begeisterung 
+haben diesen Tag besonders gemacht!
+Ich wünsche euch alles Gute und hoffe, euch bald wieder hier in der Bibliothek zu sehen. Macht's gut und bis zum nächsten Mal!]]>
                 </text>
               </pluginContent>
               <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />

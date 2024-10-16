@@ -1,0 +1,7 @@
+Willkommen zu unserer spannenden BlueBot-Challenge! Heute haben wir zwei Teams: Eines wird Hindernisse aufstellen, während das andere Team die BlueBots programmiert, um diesen Weg erfolgreich zu meistern.
+
+Jedes Team muss kreativ sein – die Hindernis-Bauer sollten sich knifflige Aufgaben ausdenken, und die Programmierer müssen ihre BlueBots so konfigurieren, dass sie den Weg ohne Probleme schaffen.
+
+Seid bereit für eine Mischung aus Technik, Geschicklichkeit und Teamarbeit! Welches Team wird es zuerst schaffen, den BlueBot ans Ziel zu bringen?
+
+Viel Spaß und Erfolg bei der BlueBot-Challenge!
