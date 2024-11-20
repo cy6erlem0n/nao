@@ -1,0 +1,1 @@
+# here you find together main library assistent project for Nao 
