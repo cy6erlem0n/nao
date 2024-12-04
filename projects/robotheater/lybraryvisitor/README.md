@@ -1,1 +1,1 @@
-# here you find robotheater fisrt szene "bad visitors" project for Nao with other robots 
+# two dashas are walking around the library making noise until nao disperses them
