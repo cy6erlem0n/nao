@@ -1,0 +1,1 @@
+# here you find robotheater fisrt szene "bad visitors" project for Nao with other robots 
