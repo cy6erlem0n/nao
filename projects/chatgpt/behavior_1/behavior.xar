@@ -10,12 +10,14 @@
     <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
     <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
     <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-    <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+    <Input name="FrontTactilTouched" type="0" type_size="1" nature="4" stm_value_name="FrontTactilTouched" inner="1" tooltip="FrontTactilTouched desc" id="4" />
+    <Input name="MiddleTactilTouched" type="0" type_size="1" nature="4" stm_value_name="MiddleTactilTouched" inner="1" tooltip="MiddleTactilTouched desc" id="5" />
+    <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="6" />
     <Timeline enable="0">
       <BehaviorLayer name="behavior_layer1">
         <BehaviorKeyframe name="keyframe1" index="1">
           <Diagram>
-            <Box name="Say" id="2" localization="8" tooltip="Say some text. The text can be localized." x="985" y="237">
+            <Box name="Say" id="2" localization="8" tooltip="Say some text. The text can be localized." x="802" y="75">
               <bitmap>media/images/box/interaction/say.png</bitmap>
               <script language="4">
                 <content>
@@ -72,7 +74,7 @@ class MyClass(GeneratedClass):
               <Parameter name="Text" inherits_from_parent="0" content_type="5" value="Hello" default_value="" tooltip="The text you want to say. Don&apos;t forget to translate it!" id="7" />
               <Resource name="Speech" type="Lock" timeout="0" />
             </Box>
-            <Box name="AskGpt" id="1" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="230" y="93">
+            <Box name="AskGpt" id="1" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="249" y="31">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -86,6 +88,8 @@ except ImportError:
     from urllib2 import Request, urlopen
 
 AUDIO_FILE = "test.wav"
+api_key = "sk-None-laWX0ykdQcVfNwieDXjjT3BlbkFJV2ZEwPrDdGc1MJXnDR2X"
+char_prompt = "Du bist ein humorvoller Chatbot in der Form eines Nao-Roboters für die Stadtteilbibliothek Buch in Berlin. Du informierst die Nutzer über Öffnungszeiten, Angebote und Veranstaltungen der Bibliothek und interagierst dabei auf witzige und charmante Weise. Öffnungszeiten: Montag: 13:00–19:00 Uhr; Dienstag: 10:00–16:00 Uhr; Mittwoch: 13:00–17:00 Uhr; Donnerstag: 13:00–19:00 Uhr; Freitag: 13:00–19:00 Uhr; Samstag: 10:00–15:00 Uhr. Angebote: Vielfältiges Medienangebot, darunter Bücher, Hörbücher, DVDs, fremdsprachige Bestände (Englisch, Polnisch, Arabisch, Persisch, Ukrainisch, Russisch, Türkisch, Spanisch), Zeitschriften, Spiele, Konsolenspiele (PlayStation 4, Nintendo Switch/DS/3DS), Tiptoi-Stifte und Bücher, Tolino eBook-Reader, Tonieboxen. Spezielle Angebote für Kinder und Jugendliche: Vermittlung von Medienkompetenz und Diversität durch Coding- und Robotikangebote (z.B. Dash und Dot, Bee Bots, Lego Education Sets), Gaming-Nachmittage mit Nintendo Switch, PlayStation 5, Gaming-Laptops und VR-Brillen. Veranstaltungen: Regelmäßige Events wie Bastelstation (jeden 1. und 3. Freitag des Monats, 15:30–16:30 Uhr), Bilderbuchkino, Senioren-Singen, Digital-Zebra (Digital-Beratung), Digital-Café, Frauen*-Workshops, Tabletkurse für Senioren, Human Library (mehrsprachig), Graffiti-Workshops für Jugendliche, Puppenbau-Workshops, Weihnachtsbasteln, Kindertheater, Spiele-Café (jeden 2. und 4. Mittwoch im Monat, 13:00–17:00 Uhr). Fahrradbibliothek: Von März bis Oktober unterwegs mit Riesenspielen und Medien zum Ausleihen, besucht verschiedene Orte in Buch, darunter Unterkünfte für Geflüchtete und die HOWOGE-Siedlung. Du nutzt diese Informationen, um den Nutzern auf humorvolle Weise weiterzuhelfen und sie über die Angebote der Bibliothek zu informieren."
 
 def call_chatgpt_api(prompt, api_key):
     url = "https://api.openai.com/v1/chat/completions"
@@ -95,7 +99,7 @@ def call_chatgpt_api(prompt, api_key):
     }
     data = json.dumps({
         "model": "gpt-3.5-turbo",
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": [{"role": "system", "content": char_prompt}, {"role": "user", "content": prompt}],
         "max_tokens": 150,
         "temperature": 0.7
     }).encode('utf-8')
@@ -106,7 +110,7 @@ def call_chatgpt_api(prompt, api_key):
         result = json.load(response)
         return result['choices'][0]['message']['content']
     except Exception as e:
-        return "Error calling ChatGPT API: " + str(e)  # Convert error to string
+        return "Error calling ChatGPT API: " + str(e)
 
 def transcribe_with_openai(file_path, api_key):
     url = "https://api.openai.com/v1/audio/transcriptions"
@@ -146,6 +150,8 @@ def transcribe_with_openai(file_path, api_key):
 
 
 class MyClass(GeneratedClass):
+    recIsRunning = False
+
     def __init__(self):
         GeneratedClass.__init__(self)
 
@@ -191,6 +197,26 @@ class MyClass(GeneratedClass):
         # You can also make the robot speak the response
         self.speak(response)
 
+    def onInput_middel(self):
+        self.audiorec.stopMicrophonesRecording();
+        if self.recIsRunning == True:
+            self.recIsRunning = False
+            #self.audioplayer.playFile("/home/nao/test.wav")
+            text = transcribe_with_openai("/home/nao/test.wav", api_key)
+            self.say(text)
+            response = call_chatgpt_api(text, api_key)
+            self.say(response)
+
+            self.delete_audio("/home/nao/test.wav")
+
+    def onInput_front(self):
+        if self.recIsRunning == False:
+            self.recIsRunning = True
+            self.say("Stell mir eine Frage.")
+            time.sleep(2)
+            channels = [0, 0, 1, 0]
+            self.audiorec.startMicrophonesRecording("/home/nao/test.wav", "wav", 16000, channels)
+
     def say(self, value):
         self.tts.pCall("say", str(value))
 
@@ -208,9 +234,11 @@ class MyClass(GeneratedClass):
               <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
               <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+              <Input name="front" type="1" type_size="1" nature="1" inner="0" tooltip="" id="4" />
+              <Input name="middel" type="1" type_size="1" nature="1" inner="0" tooltip="" id="5" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="6" />
             </Box>
-            <Box name="GetVoice" id="3" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="684" y="207">
+            <Box name="GetVoice" id="3" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="644" y="78">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -243,9 +271,10 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" />
-            <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
-            <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" />
+            <Link inputowner="0" indexofinput="6" outputowner="2" indexofoutput="4" />
+            <Link inputowner="0" indexofinput="6" outputowner="1" indexofoutput="6" />
+            <Link inputowner="1" indexofinput="5" outputowner="0" indexofoutput="5" />
+            <Link inputowner="1" indexofinput="4" outputowner="0" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

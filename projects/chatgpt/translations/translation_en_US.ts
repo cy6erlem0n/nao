@@ -10,4 +10,12 @@
             <translation>Hello</translation>
         </message>
     </context>
+    <context>
+        <name>behavior_1/behavior.xar:/Say (1)</name>
+        <message>
+            <source>Hello</source>
+            <comment>Text</comment>
+            <translation type="vanished">Hello</translation>
+        </message>
+    </context>
 </TS>
