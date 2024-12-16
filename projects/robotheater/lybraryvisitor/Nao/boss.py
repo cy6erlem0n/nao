@@ -23,19 +23,23 @@ class MyClass(GeneratedClass):
 
         self.bIsRunning = True
         try:
-            # Встать в начальную позу
-            self.posture.goToPosture("StandInit", 0.5)
+            # Убедиться, что робот стоит ровно
+            self.posture.goToPosture("StandInit", 0.7)
             time.sleep(1)
 
-            # Делает три шага вперед
+            # Включить стабильность шага
             self.motion.moveInit()
-            for _ in range(1):
-                self.motion.moveTo(0.2, 0.0, 0.0)  # Шаг вперед на 20 см
+            self.motion.setWalkArmsEnabled(True, True)  # Включить движение рук для баланса
+            self.motion.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])  # Контроль контакта стоп
+
+            # Делает три шага вперед с настройкой параметров
+            for _ in range(3):
+                self.motion.moveTo(0.3, 0.0, 0.0)  # Шаг вперед на 30 см
                 time.sleep(1)
 
             # Передача булевого флага после трех шагов
             self.onStopped()  # Сигнализируем завершение первой части действий
-            
+
             # Поднимает руки вверх
             self.motion.angleInterpolationWithSpeed(
                 ["LShoulderPitch", "RShoulderPitch"],  # Только плечи
