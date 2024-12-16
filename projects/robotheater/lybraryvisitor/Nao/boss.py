@@ -32,8 +32,8 @@ class MyClass(GeneratedClass):
             self.motion.setWalkArmsEnabled(True, True)  # Включить движение рук для баланса
             self.motion.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])  # Контроль контакта стоп
 
-            # Делает три шага вперед с настройкой параметров
-            for _ in range(3):
+            # Делает шаг вперед с настройкой параметров
+            for _ in range(1):
                 self.motion.moveTo(0.3, 0.0, 0.0)  # Шаг вперед на 30 см
                 time.sleep(1)
 
