@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ChoregrapheProject xmlns="http://www.ald.softbankrobotics.com/schema/choregraphe/project.xsd" xar_version="3">
+  <Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0">
+    <bitmap>media/images/box/root.png</bitmap>
+    <script language="4">
+      <content>
+        <![CDATA[]]>
+      </content>
+    </script>
+    <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+    <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+    <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+    <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+    <Timeline enable="0">
+      <BehaviorLayer name="behavior_layer1">
+        <BehaviorKeyframe name="keyframe1" index="1">
+          <Diagram>
+            <Box name="Python Script" id="1" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="130" y="87">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import time
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.motion = None
+        self.posture = None
+        self.speech = None
+        self.logger = None
+        self.bIsRunning = False  # Булевый флаг выполнения
+
+    def onLoad(self):
+        try:
+            self.motion = self.session().service("ALMotion")
+            self.posture = self.session().service("ALRobotPosture")
+            self.speech = self.session().service("ALAnimatedSpeech")
+            self.logger = self.session().service("ALLogger")
+            if self.logger:
+                self.logger.info("MyClass", "Блок загружен и готов к работе.")
+        except Exception as e:
+            if self.logger:
+                self.logger.error("MyClass", "Ошибка при загрузке: {}".format(e))
+
+    def onUnload(self):
+        try:
+            if self.bIsRunning:
+                self.motion.stopMove()
+                if self.logger:
+                    self.logger.info("MyClass", "Движение остановлено.")
+        except Exception as e:
+            if self.logger:
+                self.logger.warning("MyClass", "Ошибка при остановке движения: {}".format(e))
+        finally:
+            self.bIsRunning = False
+            try:
+                if self.logger:
+                    self.logger.info("MyClass", "Блок выгружен.")
+            except:
+                pass
+            # Явное освобождение объектов
+            self.motion = None
+            self.posture = None
+            self.speech = None
+            self.logger = None
+
+    def onInput_onStart(self):
+        if self.bIsRunning:
+            if self.logger:
+                self.logger.warning("MyClass", "Блок уже выполняется.")
+            return
+
+        self.bIsRunning = True
+        try:
+            if self.logger:
+                self.logger.info("MyClass", "Запуск блока.")
+            # Начальная поза
+            self.posture.goToPosture("StandInit", 0.7)
+            time.sleep(1)
+
+            # Вступление - наклон головы вниз
+            text_to_speak = "Wann hatte dieser Welt viele Geräusche..."
+            if self.logger:
+                self.logger.info("MyClass", "Произнесение текста: {}".format(text_to_speak))
+            self.speech.say("\\rspd=90\\ \\vct=80\\ {}".format(text_to_speak))
+            self.motion.angleInterpolationWithSpeed("HeadPitch", 0.3, 0.1)
+            time.sleep(1)
+
+            # Поднимаем голову и руки
+            if self.logger:
+                self.logger.info("MyClass", "Поднимаем голову и руки.")
+            self.motion.angleInterpolationWithSpeed(
+                ["HeadPitch", "LShoulderPitch", "RShoulderPitch"],
+                [0.0, 0.5, 0.5],
+                0.1
+            )
+            time.sleep(2)
+
+            # Возвращаем руки в нейтральное положение
+            if self.logger:
+                self.logger.info("MyClass", "Возвращаем руки в нейтральное положение.")
+            self.motion.angleInterpolationWithSpeed(
+                ["LShoulderPitch", "RShoulderPitch"],
+                [1.5, 1.5],
+                0.1
+            )
+            if self.logger:
+                self.logger.info("MyClass", "Блок завершён.")
+            self.onStopped()
+        except Exception as e:
+            if self.logger:
+                self.logger.error("MyClass", "Ошибка во время выполнения: {}".format(e))
+        finally:
+            self.bIsRunning = False
+
+    def onInput_onStop(self):
+        if self.logger:
+            self.logger.info("MyClass", "Принудительная остановка блока.")
+        self.onUnload()
+        self.onStopped()]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" />
+          </Diagram>
+        </BehaviorKeyframe>
+      </BehaviorLayer>
+    </Timeline>
+  </Box>
+</ChoregrapheProject>
