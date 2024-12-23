@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ChoregrapheProject xmlns="http://www.ald.softbankrobotics.com/schema/choregraphe/project.xsd" xar_version="3">
+  <Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0">
+    <bitmap>media/images/box/root.png</bitmap>
+    <script language="4">
+      <content>
+        <![CDATA[]]>
+      </content>
+    </script>
+    <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+    <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+    <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+    <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+    <Timeline enable="0">
+      <BehaviorLayer name="behavior_layer1">
+        <BehaviorKeyframe name="keyframe1" index="1">
+          <Diagram>
+            <Box name="reading" id="1" localization="8" tooltip="reading attempt" x="161" y="44">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import time
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.speech = None
+        self.logger = None
+        self.motion = None
+        self.bIsRunning = False
+
+    def onLoad(self):
+        try:
+            self.speech = self.session().service("ALTextToSpeech")
+            self.logger = self.session().service("ALLogger")
+            self.motion = self.session().service("ALMotion")
+            self.logger.info("MyClass", "Блок загружен и готов к работе.")
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при загрузке: " + str(e))
+
+    def follow_bluebot(self):
+        """Робот следит за движением Bluebot."""
+        try:
+            self.logger.info("MyClass", "Робот начинает следить за Bluebot.")
+            # Поворачиваем голову вправо
+            self.motion.setAngles("HeadYaw", -0.5, 0.1)  # Поворот вправо
+            time.sleep(1.5)
+
+            # Возвращаем голову в центр
+            self.motion.setAngles("HeadYaw", 0.0, 0.1)  # Центр
+            time.sleep(1.0)
+
+            self.logger.info("MyClass", "Робот завершил слежение за Bluebot.")
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при слежении за Bluebot: " + str(e))
+
+    def read_word(self):
+        """Робот пытается прочитать слово."""
+        try:
+            self.logger.info("MyClass", "Робот делает вид, что читает слово.")
+            self.motion.setAngles("HeadPitch", 0.2, 0.1)  # Лёгкий наклон вниз
+            time.sleep(2.0)  # Задержка для имитации чтения
+            self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возврат головы
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при попытке прочитать слово: " + str(e))
+
+    def address_audience(self):
+        """Робот обращается к зрителям."""
+        try:
+            self.logger.info("MyClass", "Робот обращается к зрителям.")
+            self.motion.setAngles("HeadPitch", -0.2, 0.1)  # Лёгкий подъём головы
+            time.sleep(1.5)
+            self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возврат в исходное положение
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при обращении к зрителям: " + str(e))
+
+    def onInput_onStart(self):
+        if self.bIsRunning:
+            self.logger.warning("MyClass", "Блок уже выполняется.")
+            return
+
+        self.bIsRunning = True
+        try:
+            self.logger.info("MyClass", "Запуск блока.")
+
+            # Выполнение последовательности действий
+            self.follow_bluebot()
+            self.read_word()
+            self.address_audience()
+
+            self.onStopped()  # Сигнал завершения
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при выполнении: " + str(e))
+        finally:
+            self.bIsRunning = False
+
+    def onInput_onStop(self):
+        self.logger.info("MyClass", "Принудительная остановка блока.")
+        self.motion.rest()  # Переводит все моторы в состояние покоя
+        self.onStopped()]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Box name="request " id="2" localization="8" tooltip="request for help" x="392" y="119">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[pass]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Box name="moving" id="3" localization="8" tooltip="moving on next akt" x="601" y="53">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[pass]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="3" indexofinput="2" outputowner="2" indexofoutput="4" />
+            <Link inputowner="0" indexofinput="4" outputowner="3" indexofoutput="4" />
+            <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" />
+          </Diagram>
+        </BehaviorKeyframe>
+      </BehaviorLayer>
+    </Timeline>
+  </Box>
+</ChoregrapheProject>
