@@ -4,103 +4,107 @@ import time
 class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
+        self.motion = None
+        self.posture = None
         self.speech = None
         self.logger = None
-        self.motion = None
         self.bIsRunning = False
 
     def onLoad(self):
         try:
+            self.motion = self.session().service("ALMotion")
+            self.posture = self.session().service("ALRobotPosture")
             self.speech = self.session().service("ALTextToSpeech")
             self.logger = self.session().service("ALLogger")
-            self.motion = self.session().service("ALMotion")
             self.logger.info("MyClass", "Блок загружен и готов к работе.")
         except Exception as e:
             self.logger.error("MyClass", "Ошибка при загрузке: " + str(e))
 
+    def reset_to_initial_pose(self):
+        """Возвращаем NAO в начальную позу Stand."""
+        try:
+            self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
+            self.posture.goToPosture("Stand", 0.8)  # Используем "Stand" для прямой позы
+            time.sleep(0.5)
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при возврате в позу Stand: " + str(e))
+
     def follow_bluebot(self):
-        """Робот следит за движением Bluebot и смотрит вниз при повороте головы."""
+        """Робот следит за движением Bluebot."""
         try:
             self.logger.info("MyClass", "Робот начинает следить за Bluebot.")
-            
-            # Поворачиваем голову вправо
             self.motion.setAngles("HeadYaw", -0.5, 0.2)  # Поворот вправо
-            # Наклоняем голову вниз
-            self.motion.setAngles("HeadPitch", 0.3, 0.1)  # Наклон головы вниз (угол 0.3, скорость 0.1)
+            self.motion.setAngles("HeadPitch", 0.3, 0.1)  # Наклон головы вниз
             time.sleep(2)
-    
-            # Возвращаем голову в центр
-            self.motion.setAngles("HeadYaw", 0.0, 0.05)  # Центр
+
+            self.motion.setAngles("HeadYaw", 0.0, 0.05)  # Возврат головы в центр
             time.sleep(4)
-    
-            # Возвращаем голову в исходное положение (прямо)
-            self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возвращение головы в исходное положение
+
+            self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возвращение головы в прямое положение
             time.sleep(1)
-    
+
             self.logger.info("MyClass", "Робот завершил слежение за Bluebot.")
         except Exception as e:
             self.logger.error("MyClass", "Ошибка при слежении за Bluebot: " + str(e))
 
-
     def read_word(self):
-        """Робот пытается прочитать слово с имитацией размышлений и трудностей в чтении."""
+        """Робот пытается прочитать слово."""
         try:
             self.logger.info("MyClass", "Робот делает вид, что читает слово.")
-            
-            # Робот наклоняет голову вниз, как бы сосредотачиваясь
             self.motion.setAngles("HeadPitch", 0.2, 0.1)  # Лёгкий наклон вниз
-            self.motion.setAngles("HeadYaw", -0.1, 0.1)  # Легкий поворот головы влево для сосредоточения
-            time.sleep(1.0)  # Короткая задержка для придания времени на сосредоточение
-    
-            # Робот издаёт звуки, как будто пытается прочитать слово
-            self.speech.say("\\rspd=30\\ \\vct=50\\ a... ")  # Медленная речь с паузами
-            time.sleep(1.0)  # Добавление паузы между звуками
-            self.speech.say("\\rspd=30\\ \\vct=50\\ hmm... ")  # Медленная речь с паузами
+            self.motion.setAngles("HeadYaw", -0.1, 0.1)  # Легкий поворот головы влево
             time.sleep(1.0)
-            # Еще раз пытается, но с неуверенностью
-            self.speech.say("\\rspd=40\\ \\vct=55\\ ehh... ")  # Сомневающаяся речь
-            time.sleep(1.5)  # Немного дольше, создаём паузу для реакции
-    
-            # После "чтения" робот возвращает голову в нормальное положение
-            self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возврат головы в исходное положение
-            self.motion.setAngles("HeadYaw", 0.0, 0.1)  # Возврат головы в центр
+
+            self.speech.say("\\rspd=30\\ \\vct=50\\ a... ")
             time.sleep(1.0)
-    
+            self.speech.say("\\rspd=30\\ \\vct=50\\ hmm... ")
+            time.sleep(1.0)
+            self.speech.say("\\rspd=40\\ \\vct=55\\ ehh... ")
+            time.sleep(1.5)
+
+            self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возврат головы в центр
+            self.motion.setAngles("HeadYaw", 0.0, 0.1)
+            time.sleep(1.0)
+
             self.logger.info("MyClass", "Робот завершил попытку прочитать слово.")
         except Exception as e:
             self.logger.error("MyClass", "Ошибка при попытке прочитать слово: " + str(e))
 
-
     def address_audience(self):
-        """Робот обращается к зрителям с помощью движений головы, чтобы привлечь внимание."""
+        """Робот обращается к зрителям."""
         try:
-            self.logger.info("MyClass", "Робот обращается к зрителям с помощью движений головы.")
-            
-            # Робот немного наклоняет голову вниз, как будто он собирается что-то сказать или спросить
-            self.motion.setAngles("HeadPitch", -0.2, 0.1)  # Лёгкий наклон головы вниз
+            self.logger.info("MyClass", "Робот обращается к зрителям.")
+    
+            # Указание на табличку ладонью вверх
+            self.motion.angleInterpolationWithSpeed(
+                ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw"],
+                [0.5, 0.0, 1.5, 0.0, 1.57],  # Положение руки и запястья, чтобы ладонь смотрела вверх
+                0.2
+            )
+            self.motion.openHand("RHand")  # Открыть ладонь
+            time.sleep(2)  # Задержка для фиксации на табличке
+            self.motion.closeHand("RHand")  # Закрыть ладонь
+    
+            # Одобрительные кивки
+            self.motion.setAngles("HeadPitch", -0.2, 0.1)  # Наклон вниз
             time.sleep(1.5)
     
-            # Робот поднимает голову, привлекая внимание зрителей
             self.motion.setAngles("HeadPitch", 0.2, 0.1)  # Подъем головы
             time.sleep(1.0)
     
-            # Далее робот может выполнить несколько движений, как будто просит внимание
-            # Легкий кивок головы, чтобы показать согласие или просьбу
             self.motion.setAngles("HeadPitch", 0.3, 0.1)  # Поднятие головы
-            time.sleep(0.3)  # Пауза
+            time.sleep(0.3)
             self.motion.setAngles("HeadPitch", 0.1, 0.1)  # Небольшой наклон вниз
-            time.sleep(0.3)  # Пауза
+            time.sleep(0.3)
     
-            # Робот снова поднимает голову, как бы подтверждая просьбу
-            self.motion.setAngles("HeadPitch", 0.2, 0.1)  # Легкий наклон вверх
-            time.sleep(1.0)  # Пауза, как будто ожидание реакции
+            self.motion.setAngles("HeadPitch", 0.2, 0.1)  # Поднятие головы
+            time.sleep(1.0)
     
-            # Робот завершает жесты, возвращая голову в исходное положение
-            self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возвращаем голову в нейтральное положение
+            self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возвращение в нейтральное положение
             self.logger.info("MyClass", "Робот завершил обращение к зрителям.")
-            
         except Exception as e:
             self.logger.error("MyClass", "Ошибка при обращении к зрителям: " + str(e))
+
 
 
     def onInput_onStart(self):
@@ -112,10 +116,15 @@ class MyClass(GeneratedClass):
         try:
             self.logger.info("MyClass", "Запуск блока.")
 
+            # Устанавливаем начальную позу
+            self.reset_to_initial_pose()
+
             # Выполнение последовательности действий
             self.follow_bluebot()
             self.read_word()
             self.address_audience()
+
+            self.reset_to_initial_pose()
 
             self.onStopped()  # Сигнал завершения
         except Exception as e:
@@ -125,5 +134,5 @@ class MyClass(GeneratedClass):
 
     def onInput_onStop(self):
         self.logger.info("MyClass", "Принудительная остановка блока.")
-        self.motion.rest()  # Переводит все моторы в состояние покоя
+        self.motion.rest()  # Перевод всех моторов в состояние покоя
         self.onStopped()
