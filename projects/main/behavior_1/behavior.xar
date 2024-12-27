@@ -88,7 +88,7 @@ class MyClass(GeneratedClass):
         tts.say("Möchtest du mehr Details zu einer dieser Kategorien hören? Frag mich einfach!")
 
     def onInput_onStart(self):
-        robotIP = "127.0.0.1"  # IP-адрес твоего NAO
+        robotIP = "169.254.96.196"  # IP-адрес твоего NAO
         PORT = 9559
 
         try:
