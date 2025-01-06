@@ -13,24 +13,57 @@ class MyClass(GeneratedClass):
             self.motion = self.session().service("ALMotion")
             self.logger = self.session().service("ALLogger")
             self.logger.info("MyClass", "Блок загружен и готов к работе.")
+            self.posture = self.session().service("ALRobotPosture")
+
+            # Проверка наличия сервиса ALMotion
+            try:
+                self.motion = self.session().service("ALMotion")
+            except Exception as e:
+                self.logger.warning("MyClass", "Сервис ALMotion недоступен. Работа в виртуальной среде.")
         except Exception as e:
             self.logger.error("MyClass", "Ошибка при загрузке: " + str(e))
 
     def reset_to_initial_pose(self):
         """Возвращаем NAO в начальную позу Stand."""
-        self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
-        self.motion.wakeUp()
-        time.sleep(0.5)
+        try:
+            self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
+            self.posture.goToPosture("Stand", 0.8)  # Используем "Stand" для прямой позы
+            time.sleep(0.5)
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при возврате в позу Stand: " + str(e))
 
     def perform_motion(self, joints, angles, speed):
         """Выполняет движение робота."""
+        if not self.motion:
+            self.logger.warning("MyClass", "ALMotion недоступен. Пропускаем движение: Joints={}, Angles={}.".format(joints, angles))
+            return
+
         try:
-            self.logger.info("MyClass", f"Выполняем движение: Joints={joints}, Angles={angles}, Speed={speed}")
+            self.logger.info("MyClass", "Выполняем движение: Joints={}, Angles={}, Speed={}".format(joints, angles, speed))
             self.motion.angleInterpolationWithSpeed(joints, angles, speed)
             time.sleep(0.5)
         except Exception as e:
-            self.logger.error("MyClass", f"Ошибка в движении: {str(e)}")
-
+            self.logger.error("MyClass", "Ошибка в движении: {}".format(str(e)))
+    
+    def perform_swaying_effect(self):
+        """Эффект пошатывания робота."""
+        try:
+            self.logger.info("MyClass", "Начинаем эффект пошатывания.")
+            
+            # Лёгкий наклон влево
+            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [0.2, -0.2, 0.1], 0.05)
+            time.sleep(0.5)  # Пауза для фиксации движения
+            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [0.0, 0.0, 0.0], 0.05)  # Возврат
+    
+            # Лёгкий наклон вправо
+            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [-0.2, 0.2, -0.1], 0.05)
+            time.sleep(0.5)  # Пауза для фиксации движения
+            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [0.0, 0.0, 0.0], 0.05)  # Возврат
+    
+            self.logger.info("MyClass", "Эффект пошатывания завершён.")
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка в эффекте пошатывания: " + str(e))
+ 
     def onInput_onStart(self):
         if self.bIsRunning:
             self.logger.warning("MyClass", "Блок уже выполняется.")
@@ -40,6 +73,12 @@ class MyClass(GeneratedClass):
         try:
             self.logger.info("MyClass", "Запуск третьего скрипта акта.")
             self.reset_to_initial_pose()
+
+            # Проверяем, доступен ли сервис движения
+            if not self.motion:
+                self.logger.warning("MyClass", "Сервис ALMotion отсутствует. Выполнение ограничено.")
+                self.onStopped()
+                return
 
             # NAO смотрит по сторонам
             self.perform_motion(["HeadYaw"], [0.5], 0.2)  # Поворот головы вправо
@@ -52,9 +91,7 @@ class MyClass(GeneratedClass):
             self.perform_motion(["HeadPitch"], [0.0], 0.15)  # Возвращение в центр
 
             # Эффект "пошатывания"
-            self.perform_motion(["LHipRoll", "RHipRoll"], [0.1, -0.1], 0.1)  # Лёгкий наклон влево
-            self.perform_motion(["LHipRoll", "RHipRoll"], [-0.1, 0.1], 0.1)  # Лёгкий наклон вправо
-
+            self.perform_swaying_effect()
             # Установка на месте, взгляд вперед
             self.perform_motion(["HeadYaw", "HeadPitch"], [0.0, 0.0], 0.2)  # Стабилизация головы
 
@@ -62,7 +99,7 @@ class MyClass(GeneratedClass):
             self.onStopped()
 
         except Exception as e:
-            self.logger.error("MyClass", f"Ошибка при выполнении: {str(e)}")
+            self.logger.error("MyClass", "Ошибка при выполнении: {}".format(str(e)))
         finally:
             self.bIsRunning = False
 

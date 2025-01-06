@@ -15,7 +15,37 @@
       <BehaviorLayer name="behavior_layer1">
         <BehaviorKeyframe name="keyframe1" index="1">
           <Diagram>
-            <Box name="request " id="2" localization="8" tooltip="request for help" x="308" y="162">
+            <Box name="request " id="2" localization="8" tooltip="request for help" x="817" y="255">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+
+    def onLoad(self):
+        #put initialization code here
+        pass
+
+    def onUnload(self):
+        #put clean-up code here
+        pass
+
+    def onInput_onStart(self):
+        #self.onStopped() #activate the output of the box
+        pass
+
+    def onInput_onStop(self):
+        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
+        self.onStopped() #activate the output of the box]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Box name="moving" id="3" localization="8" tooltip="moving on next akt" x="262" y="61">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -26,105 +56,107 @@ class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
         self.motion = None
-        self.posture = None
-        self.speech = None
-        self.speech_recognition = None
-        self.memory = None
-        self.isListening = False
-        self.last_spoken = None
-        self.word_dict = {  # Словарь ключ-значение
-            "hallo": "Hallo, wie geht es dir?",
-            "danke": "Bitte schön.",
-            "tschüss": "Auf Wiedersehen!",
-            "bitte": "Kein Problem!",
-            "nao": "Ja, das bin ich, Nao.",
-            "wie geht's": "Mir geht es gut, danke!",
-            "gut": "Das freut mich zu hören.",
-            "schlecht": "Das tut mir leid zu hören.",
-            "dumm" : "Ich bin total dumm"
-        }
+        self.logger = None
+        self.bIsRunning = False
 
     def onLoad(self):
         try:
             self.motion = self.session().service("ALMotion")
+            self.logger = self.session().service("ALLogger")
+            self.logger.info("MyClass", "Блок загружен и готов к работе.")
             self.posture = self.session().service("ALRobotPosture")
-            self.speech = self.session().service("ALTextToSpeech")
-            self.speech_recognition = self.session().service("ALSpeechRecognition")
-            self.memory = self.session().service("ALMemory")
 
-            # Установка языка и словаря
-            self.speech.setLanguage("German")
-            self.speech_recognition.setLanguage("German")
-            vocabulary = list(self.word_dict.keys())
-            self.speech_recognition.setVocabulary(vocabulary, False)
-
-            # Параметры улучшения распознавания речи
-            self.speech.setVolume(0.6)  # Уменьшение громкости
+            # Проверка наличия сервиса ALMotion
+            try:
+                self.motion = self.session().service("ALMotion")
+            except Exception as e:
+                self.logger.warning("MyClass", "Сервис ALMotion недоступен. Работа в виртуальной среде.")
         except Exception as e:
-            self.logger.error("Ошибка при загрузке: " + str(e))
+            self.logger.error("MyClass", "Ошибка при загрузке: " + str(e))
 
     def reset_to_initial_pose(self):
+        """Возвращаем NAO в начальную позу Stand."""
         try:
-            self.posture.goToPosture("Stand", 0.8)
+            self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
+            self.posture.goToPosture("Stand", 0.8)  # Используем "Stand" для прямой позы
             time.sleep(0.5)
         except Exception as e:
-            self.logger.error("Ошибка при возврате в позу Stand: " + str(e))
+            self.logger.error("MyClass", "Ошибка при возврате в позу Stand: " + str(e))
 
-    def simulate_listening(self):
+    def perform_motion(self, joints, angles, speed):
+        """Выполняет движение робота."""
+        if not self.motion:
+            self.logger.warning("MyClass", "ALMotion недоступен. Пропускаем движение: Joints={}, Angles={}.".format(joints, angles))
+            return
+
         try:
-            self.motion.setAngles("HeadYaw", 0.3, 0.1)  # Поворот головы вправо
-            time.sleep(1)
-            self.motion.setAngles("HeadYaw", -0.3, 0.1)  # Поворот головы влево
-            time.sleep(1)
-            self.motion.setAngles("HeadYaw", 0.0, 0.1)  # Возврат в центр
+            self.logger.info("MyClass", "Выполняем движение: Joints={}, Angles={}, Speed={}".format(joints, angles, speed))
+            self.motion.angleInterpolationWithSpeed(joints, angles, speed)
+            time.sleep(0.5)
         except Exception as e:
-            self.logger.error("Ошибка при движении головы: " + str(e))
+            self.logger.error("MyClass", "Ошибка в движении: {}".format(str(e)))
 
-    def listen_and_repeat(self):
+    def perform_swaying_effect(self):
+        """Эффект пошатывания робота."""
         try:
-            self.simulate_listening()
-            self.speech.say("Hallo! Bitte sage etwas, und ich werde versuchen, es zu verstehen.")
-            time.sleep(1)  # Пауза перед активацией слушания
+            self.logger.info("MyClass", "Начинаем эффект пошатывания.")
 
-            self.speech_recognition.subscribe("RepeatListener")
-            time.sleep(5)  # Время прослушивания
-            data = self.memory.getData("WordRecognized")
-            self.speech_recognition.unsubscribe("RepeatListener")
+            # Лёгкий наклон влево
+            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [0.2, -0.2, 0.1], 0.05)
+            time.sleep(0.5)  # Пауза для фиксации движения
+            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [0.0, 0.0, 0.0], 0.05)  # Возврат
 
-            if data and len(data) > 0:
-                recognized_word = data[0]
-                confidence = data[1] if len(data) > 1 else 0.0
+            # Лёгкий наклон вправо
+            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [-0.2, 0.2, -0.1], 0.05)
+            time.sleep(0.5)  # Пауза для фиксации движения
+            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [0.0, 0.0, 0.0], 0.05)  # Возврат
 
-                if confidence > 0.3:
-                    if recognized_word in self.word_dict:
-                        self.speech.say(self.word_dict[recognized_word])
-                    else:
-                        self.speech.say("Entschuldigung, ich kenne dieses Wort nicht.")
-                else:
-                    self.speech.say("Entschuldigung, ich bin mir nicht sicher, was du gesagt hast.")
-            else:
-                self.speech.say("Entschuldigung, ich habe nichts gehört.")
+            self.logger.info("MyClass", "Эффект пошатывания завершён.")
         except Exception as e:
-            self.logger.error("Ошибка при прослушивании и повторении: " + str(e))
+            self.logger.error("MyClass", "Ошибка в эффекте пошатывания: " + str(e))
 
     def onInput_onStart(self):
+        if self.bIsRunning:
+            self.logger.warning("MyClass", "Блок уже выполняется.")
+            return
+
+        self.bIsRunning = True
         try:
-            self.logger.info("Запуск блока.")
+            self.logger.info("MyClass", "Запуск третьего скрипта акта.")
             self.reset_to_initial_pose()
-            self.listen_and_repeat()
-        except Exception as e:
-            self.logger.error("Ошибка при запуске: " + str(e))
-        finally:
+
+            # Проверяем, доступен ли сервис движения
+            if not self.motion:
+                self.logger.warning("MyClass", "Сервис ALMotion отсутствует. Выполнение ограничено.")
+                self.onStopped()
+                return
+
+            # NAO смотрит по сторонам
+            self.perform_motion(["HeadYaw"], [0.5], 0.2)  # Поворот головы вправо
+            self.perform_motion(["HeadYaw"], [-0.5], 0.2)  # Поворот головы влево
+            self.perform_motion(["HeadYaw"], [0.0], 0.2)  # Возвращение головы прямо
+
+            # Наклоны головы вниз
+            self.perform_motion(["HeadPitch"], [0.2], 0.15)  # Голова вниз
+            self.perform_motion(["HeadPitch"], [-0.2], 0.15)  # Голова вверх
+            self.perform_motion(["HeadPitch"], [0.0], 0.15)  # Возвращение в центр
+
+            # Эффект "пошатывания"
+            self.perform_swaying_effect()
+            # Установка на месте, взгляд вперед
+            self.perform_motion(["HeadYaw", "HeadPitch"], [0.0, 0.0], 0.2)  # Стабилизация головы
+
+            self.logger.info("MyClass", "Третий скрипт акта завершён.")
             self.onStopped()
 
-    def onInput_onStop(self):
-        try:
-            self.speech_recognition.unsubscribe("RepeatListener")
-            self.logger.info("Распознавание отключено.")
         except Exception as e:
-            self.logger.error("Ошибка при остановке: " + str(e))
+            self.logger.error("MyClass", "Ошибка при выполнении: {}".format(str(e)))
         finally:
-            self.onStopped()]]>
+            self.bIsRunning = False
+
+    def onInput_onStop(self):
+        self.logger.info("MyClass", "Принудительная остановка блока.")
+        self.onStopped()]]>
                 </content>
               </script>
               <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
@@ -132,19 +164,7 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Box name="moving" id="3" localization="8" tooltip="moving on next akt" x="616" y="179">
-              <bitmap>media/images/box/box-python-script.png</bitmap>
-              <script language="4">
-                <content>
-                  <![CDATA[pass]]>
-                </content>
-              </script>
-              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
-            </Box>
-            <Box name="reading" id="1" localization="8" tooltip="reading attempt" x="188" y="398">
+            <Box name="reading" id="1" localization="8" tooltip="reading attempt" x="411" y="254">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -293,8 +313,38 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Link inputowner="2" indexofinput="2" outputowner="0" indexofoutput="2" />
-            <Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" />
+            <Box name="request  light" id="4" localization="8" tooltip="request for help" x="553" y="384">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+
+    def onLoad(self):
+        #put initialization code here
+        pass
+
+    def onUnload(self):
+        #put clean-up code here
+        pass
+
+    def onInput_onStart(self):
+        #self.onStopped() #activate the output of the box
+        pass
+
+    def onInput_onStop(self):
+        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
+        self.onStopped() #activate the output of the box]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="0" indexofinput="4" outputowner="3" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

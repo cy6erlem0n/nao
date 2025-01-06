@@ -104,7 +104,8 @@ class MyClass(GeneratedClass):
             self.logger.info("MyClass", "Робот завершил обращение к зрителям.")
         except Exception as e:
             self.logger.error("MyClass", "Ошибка при обращении к зрителям: " + str(e))
-
+    
+    
 
 
     def onInput_onStart(self):
@@ -123,7 +124,6 @@ class MyClass(GeneratedClass):
             self.follow_bluebot()
             self.read_word()
             self.address_audience()
-
             self.reset_to_initial_pose()
 
             self.onStopped()  # Сигнал завершения
