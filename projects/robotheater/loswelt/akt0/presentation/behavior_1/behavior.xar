@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ChoregrapheProject xmlns="http://www.ald.softbankrobotics.com/schema/choregraphe/project.xsd" xar_version="3">
+  <Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0">
+    <bitmap>media/images/box/root.png</bitmap>
+    <script language="4">
+      <content>
+        <![CDATA[]]>
+      </content>
+    </script>
+    <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+    <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+    <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+    <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+    <Timeline enable="0">
+      <BehaviorLayer name="behavior_layer1">
+        <BehaviorKeyframe name="keyframe1" index="1">
+          <Diagram>
+            <Box name="Python Script" id="1" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="253" y="125">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import time
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.motion = None
+        self.posture = None
+        self.speech = None
+        self.logger = None
+        self.bIsRunning = False
+
+    def onLoad(self):
+        try:
+            self.motion = self.session().service("ALMotion")
+            self.posture = self.session().service("ALRobotPosture")
+            self.speech = self.session().service("ALAnimatedSpeech")
+            self.logger = self.session().service("ALLogger")
+            self.logger.info("MyClass", "Блок загружен и готов к работе.")
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при загрузке: " + str(e))
+
+    def reset_to_initial_pose(self):
+        """Возвращаем NAO в начальную позу Stand."""
+        self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
+        self.posture.goToPosture("Stand", 0.8)  # Используем "Stand" для более прямой позы
+        time.sleep(0.5)
+
+    def perform_motion(self, joints, angles, speed):
+        """Выполняет движение робота."""
+        try:
+            self.logger.info("MyClass", "Выполняем движение: Joints={}, Angles={}, Speed={}".format(joints, angles, speed))
+            self.motion.angleInterpolationWithSpeed(joints, angles, speed)
+            time.sleep(0.5)
+            self.logger.info("MyClass", "Движение завершено.")
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка в движении: " + str(e))
+
+    def speak(self, text):
+        """Произносит текст."""
+        try:
+            self.logger.info("MyClass", "Начато произнесение текста: " + text)
+            self.speech.say(text)
+            self.logger.info("MyClass", "Текст завершён.")
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка в речи: " + str(e))
+
+    def onInput_onStart(self):
+        if self.bIsRunning:
+            self.logger.warning("MyClass", "Блок уже выполняется.")
+            return
+
+        self.bIsRunning = True
+        try:
+            self.logger.info("MyClass", "Запуск блока.")
+            self.reset_to_initial_pose()
+
+            # Полный текст и соответствующие движения
+            sequences = [
+                {
+                    "text": "\\rspd=80\\ \\vct=70\\ Früher war diese Welt voller Klänge... Lachen, Stimmen, Musik – all das war ein Teil des Lebens.",
+                    "motions": {
+                        "joints": ["LShoulderPitch", "RShoulderPitch"],
+                        "angles": [0.4, 0.4],
+                        "speed": 0.15
+                    }
+                },
+                {
+                    "text": "\\rspd=80\\ \\vct=70\\ Doch eines Tages änderte sich alles. Die Klänge verschwanden und hinterließen nichts als Stille.",
+                    "motions": {
+                        "joints": ["HeadPitch"],
+                        "angles": [0.3],
+                        "speed": 0.1
+                    }
+                },
+                {
+                    "text": "\\rspd=80\\ \\vct=70\\ Niemand weiß, was der Grund für diesen Verlust war.",
+                    "motions": {
+                        "joints": ["RShoulderRoll"],
+                        "angles": [-0.3],
+                        "speed": 0.1
+                    }
+                },
+                {
+                    "text": "\\rspd=80\\ \\vct=70\\ Die Menschen versuchten, das Verlorene wiederherzustellen, aber ohne Erfolg. Die Welt blieb stumm.",
+                    "motions": {
+                        "joints": ["LShoulderRoll"],
+                        "angles": [0.3],
+                        "speed": 0.1
+                    }
+                },
+                {
+                    "text": "\\rspd=80\\ \\vct=70\\ Doch es heißt, es gibt einen Weg, die Klänge zurückzubringen.",
+                    "motions": {
+                        "joints": ["HeadYaw"],
+                        "angles": [0.3],
+                        "speed": 0.1
+                    }
+                },
+                {
+                    "text": "\\rspd=80\\ \\vct=70\\ Heute beginnt eine Reise. Wir müssen die Klänge sammeln und das wiederherstellen, was verloren gegangen ist.",
+                    "motions": {
+                        "joints": ["RShoulderPitch"],
+                        "angles": [0.5],
+                        "speed": 0.15
+                    }
+                },
+                {
+                    "text": "\\rspd=80\\ \\vct=70\\ Taucht ein in die Stille... und seid bereit, der Welt ihre Stimme zurückzugeben.",
+                    "motions": {
+                        "joints": ["LShoulderPitch", "RShoulderPitch"],
+                        "angles": [0.6, 0.6],
+                        "speed": 0.15
+                    }
+                }
+            ]
+
+            for sequence in sequences:
+                self.reset_to_initial_pose()
+                self.speak(sequence["text"])
+                self.perform_motion(
+                    sequence["motions"]["joints"],
+                    sequence["motions"]["angles"],
+                    sequence["motions"]["speed"]
+                )
+                self.reset_to_initial_pose()
+
+            self.logger.info("MyClass", "Блок завершён.")
+            self.onStopped()
+
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при выполнении: " + str(e))
+        finally:
+            self.bIsRunning = False
+
+    def onInput_onStop(self):
+        self.logger.info("MyClass", "Принудительная остановка блока.")
+        self.onUnload()
+        self.onStopped()]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" />
+          </Diagram>
+        </BehaviorKeyframe>
+      </BehaviorLayer>
+    </Timeline>
+  </Box>
+</ChoregrapheProject>
