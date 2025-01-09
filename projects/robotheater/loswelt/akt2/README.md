@@ -1,3 +1,20 @@
+### **Act 2: The Stone Corridor (NAO and Dash)**
+
+#### **Scene and Background**
+- **Background**: A stone corridor with dark walls and subtle light accents.  
+
+#### **Events**
+1. Dash appears and examines NAO, moving around it.  
+   - Dash signals a large cube blocking the path as an obstacle.  
+2. NAO approaches the cube and pushes it, clearing the way.  
+3. Afterward, Dash reveals a sheet with the next phrase fragment:  
+   - **"der Vergangenheit"** (of the past).  
+4. NAO takes the sheet, shows it to the audience, and repeats the phrase so far:  
+   - **"Die Stimmen der Vergangenheit"**.  
+
+#### **End of the Act**  
+- NAO walks forward through the cleared passage.
+
 # 2 акт: Препятствие и слово (NAO и Dash)
 # Сцена и фон
 # 

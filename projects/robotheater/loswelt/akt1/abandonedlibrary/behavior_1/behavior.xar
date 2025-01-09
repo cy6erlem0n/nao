@@ -19,112 +19,7 @@
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
-                  <![CDATA[from naoqi import ALProxy
-import time
-
-class MyClass(GeneratedClass):
-    def __init__(self):
-        GeneratedClass.__init__(self)
-        self.motion = None
-        self.posture = None
-        self.speech = None
-        self.speech_recognition = None
-        self.memory = None
-        self.isListening = False
-        self.last_spoken = None
-        self.word_dict = {  # Словарь ключ-значение
-            "hallo": "Hallo, wie geht es dir?",
-            "danke": "Bitte schön.",
-            "tschüss": "Auf Wiedersehen!",
-            "bitte": "Kein Problem!",
-            "nao": "Ja, das bin ich, Nao.",
-            "wie geht's": "Mir geht es gut, danke!",
-            "gut": "Das freut mich zu hören.",
-            "schlecht": "Das tut mir leid zu hören.",
-            "dumm" : "Ich bin total dumm"
-        }
-
-    def onLoad(self):
-        try:
-            self.motion = self.session().service("ALMotion")
-            self.posture = self.session().service("ALRobotPosture")
-            self.speech = self.session().service("ALTextToSpeech")
-            self.speech_recognition = self.session().service("ALSpeechRecognition")
-            self.memory = self.session().service("ALMemory")
-
-            # Установка языка и словаря
-            self.speech.setLanguage("German")
-            self.speech_recognition.setLanguage("German")
-            vocabulary = list(self.word_dict.keys())
-            self.speech_recognition.setVocabulary(vocabulary, False)
-
-            # Параметры улучшения распознавания речи
-            self.speech.setVolume(0.6)  # Уменьшение громкости
-        except Exception as e:
-            self.logger.error("Ошибка при загрузке: " + str(e))
-
-    def reset_to_initial_pose(self):
-        try:
-            self.posture.goToPosture("Stand", 0.8)
-            time.sleep(0.5)
-        except Exception as e:
-            self.logger.error("Ошибка при возврате в позу Stand: " + str(e))
-
-    def simulate_listening(self):
-        try:
-            self.motion.setAngles("HeadYaw", 0.3, 0.1)  # Поворот головы вправо
-            time.sleep(1)
-            self.motion.setAngles("HeadYaw", -0.3, 0.1)  # Поворот головы влево
-            time.sleep(1)
-            self.motion.setAngles("HeadYaw", 0.0, 0.1)  # Возврат в центр
-        except Exception as e:
-            self.logger.error("Ошибка при движении головы: " + str(e))
-
-    def listen_and_repeat(self):
-        try:
-            self.simulate_listening()
-            self.speech.say("Hallo! Bitte sage etwas, und ich werde versuchen, es zu verstehen.")
-            time.sleep(1)  # Пауза перед активацией слушания
-
-            self.speech_recognition.subscribe("RepeatListener")
-            time.sleep(5)  # Время прослушивания
-            data = self.memory.getData("WordRecognized")
-            self.speech_recognition.unsubscribe("RepeatListener")
-
-            if data and len(data) > 0:
-                recognized_word = data[0]
-                confidence = data[1] if len(data) > 1 else 0.0
-
-                if confidence > 0.3:
-                    if recognized_word in self.word_dict:
-                        self.speech.say(self.word_dict[recognized_word])
-                    else:
-                        self.speech.say("Entschuldigung, ich kenne dieses Wort nicht.")
-                else:
-                    self.speech.say("Entschuldigung, ich bin mir nicht sicher, was du gesagt hast.")
-            else:
-                self.speech.say("Entschuldigung, ich habe nichts gehört.")
-        except Exception as e:
-            self.logger.error("Ошибка при прослушивании и повторении: " + str(e))
-
-    def onInput_onStart(self):
-        try:
-            self.logger.info("Запуск блока.")
-            self.reset_to_initial_pose()
-            self.listen_and_repeat()
-        except Exception as e:
-            self.logger.error("Ошибка при запуске: " + str(e))
-        finally:
-            self.onStopped()
-
-    def onInput_onStop(self):
-        try:
-            self.speech_recognition.unsubscribe("RepeatListener")
-            self.logger.info("Распознавание отключено.")
-        except Exception as e:
-            self.logger.error("Ошибка при остановке: " + str(e))
-        finally:
-            self.onStopped()]]>
+                  <![CDATA[pass]]>
                 </content>
               </script>
               <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
@@ -132,7 +27,7 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Box name="moving" id="3" localization="8" tooltip="moving on next akt" x="595" y="116">
+            <Box name="moving" id="3" localization="8" tooltip="moving on next akt" x="701" y="145">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -184,19 +79,29 @@ class MyClass(GeneratedClass):
             self.logger.error("MyClass", "Ошибка в движении: {}".format(str(e)))
 
     def perform_swaying_effect(self):
-        """Эффект пошатывания робота."""
+        """Эффект пошатывания робота с поочередными движениями ног."""
         try:
             self.logger.info("MyClass", "Начинаем эффект пошатывания.")
 
-            # Лёгкий наклон влево
-            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [0.2, -0.2, 0.1], 0.05)
-            time.sleep(0.5)  # Пауза для фиксации движения
-            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [0.0, 0.0, 0.0], 0.05)  # Возврат
+            # Шаг 1: Лёгкий присест на левую ногу
+            self.perform_motion(["LHipPitch"], [0.1], 0.2)  # Сгибаем левую ногу
+            self.perform_motion(["RHipPitch"], [-0.05], 0.2)  # Чуть выпрямляем правую
+            self.perform_motion(["LHipRoll"], [0.05], 0.2)  # Смещаем вес на левую
+            time.sleep(0.4)  # Пауза для фиксации
 
-            # Лёгкий наклон вправо
-            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [-0.2, 0.2, -0.1], 0.05)
-            time.sleep(0.5)  # Пауза для фиксации движения
-            self.perform_motion(["LHipRoll", "RHipRoll", "Torso"], [0.0, 0.0, 0.0], 0.05)  # Возврат
+            # Возврат в центр
+            self.perform_motion(["LHipPitch", "RHipPitch", "LHipRoll"], [0.0, 0.0, 0.0], 0.2)
+            time.sleep(0.3)
+
+            # Шаг 2: Лёгкий присест на правую ногу
+            self.perform_motion(["RHipPitch"], [0.1], 0.2)  # Сгибаем правую ногу
+            self.perform_motion(["LHipPitch"], [-0.05], 0.2)  # Чуть выпрямляем левую
+            self.perform_motion(["RHipRoll"], [0.05], 0.2)  # Смещаем вес на правую
+            time.sleep(0.4)  # Пауза для фиксации
+
+            # Возврат в центр
+            self.perform_motion(["LHipPitch", "RHipPitch", "RHipRoll"], [0.0, 0.0, 0.0], 0.2)
+            time.sleep(0.3)
 
             self.logger.info("MyClass", "Эффект пошатывания завершён.")
         except Exception as e:
@@ -251,7 +156,7 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Box name="reading" id="1" localization="8" tooltip="reading attempt" x="176" y="284">
+            <Box name="reading" id="1" localization="8" tooltip="reading attempt" x="162" y="37">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -400,7 +305,7 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Box name="request  light" id="4" localization="8" tooltip="request for help" x="286" y="86">
+            <Box name="request  light" id="4" localization="8" tooltip="request for help" x="337" y="92">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -413,126 +318,84 @@ class MyClass(GeneratedClass):
         self.motion = None
         self.posture = None
         self.speech = None
-        self.speech_recognition = None
-        self.memory = None
-        self.isListening = False
-        self.last_spoken = None
-        self.word_dict = {  # Словарь ключ-значение
-            "hallo": "Hallo, wie geht es dir?",
-            "danke": "Bitte schön.",
-            "tschüss": "Auf Wiedersehen!",
-            "bitte": "Kein Problem!",
-            "nao": "Ja, das bin ich, Nao.",
-            "wie geht's": "Mir geht es gut, danke!",
-            "gut": "Das freut mich zu hören.",
-            "schlecht": "Das tut mir leid zu hören.",
-            "dumm" : "Ich bin total dumm"
-        }
+        self.logger = None
+        self.is_virtual = False  # Флаг для проверки виртуального робота
 
     def onLoad(self):
         try:
-            self.motion = self.session().service("ALMotion")
-            self.posture = self.session().service("ALRobotPosture")
-            self.speech = self.session().service("ALTextToSpeech")
-            self.speech_recognition = self.session().service("ALSpeechRecognition")
-            self.memory = self.session().service("ALMemory")
+            self.logger = self.session().service("ALLogger")
+            self.logger.info("MyClass", "Блок загружен и готов к работе.")
 
-            # Установка языка и словаря
-            self.speech.setLanguage("German")
-            self.speech_recognition.setLanguage("German")
-            vocabulary = list(self.word_dict.keys())
-            self.speech_recognition.setVocabulary(vocabulary, False)
+            # Проверяем наличие сервиса ALMotion
+            try:
+                self.motion = self.session().service("ALMotion")
+                self.posture = self.session().service("ALRobotPosture")
+                self.speech = self.session().service("ALTextToSpeech")
+            except Exception as e:
+                self.is_virtual = True  # Устанавливаем флаг виртуального робота
+                self.logger.warning("MyClass", "Работа в виртуальной среде.")
 
-            # Параметры улучшения распознавания речи
-            self.speech.setVolume(0.6)  # Уменьшение громкости
         except Exception as e:
-            self.logger.error("Ошибка при загрузке: " + str(e))
+            if self.logger:
+                self.logger.error("MyClass", "Ошибка при загрузке: " + str(e))
 
     def reset_to_initial_pose(self):
+        """Возвращаем NAO в начальную позу Stand."""
         try:
-            self.posture.goToPosture("Stand", 0.8)
-            time.sleep(0.5)
+            if not self.is_virtual:
+                self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
+                self.posture.goToPosture("Stand", 0.8)
+                time.sleep(0.5)
+            else:
+                self.logger.info("MyClass", "Виртуальный робот: пропускаем возврат в позу Stand.")
         except Exception as e:
-            self.logger.error("Ошибка при возврате в позу Stand: " + str(e))
+            self.logger.error("MyClass", "Ошибка при возврате в позу Stand: " + str(e))
 
-    def simulate_listening(self):
+    def say_or_log(self, text):
+        """Произнести текст или вывести его в лог в зависимости от типа робота."""
         try:
-            self.motion.setAngles("HeadYaw", 0.3, 0.1)  # Поворот головы вправо
-            time.sleep(1)
-            self.motion.setAngles("HeadYaw", -0.3, 0.1)  # Поворот головы влево
-            time.sleep(1)
-            self.motion.setAngles("HeadYaw", 0.0, 0.1)  # Возврат в центр
+            if not self.is_virtual:
+                self.speech.say(text)
+            else:
+                self.logger.info("MyClass", "Виртуальный робот: {}".format(text))
         except Exception as e:
-            self.logger.error("Ошибка при движении головы: " + str(e))
+            self.logger.error("MyClass", "Ошибка при воспроизведении текста: " + str(e))
 
     def first_word(self):
         """Робот читает первое слово."""
         try:
             self.logger.info("MyClass", "Робот читает первое слово.")
-            self.speech.say("\\rspd=30\\ \\vct=50\\ d... ")
-            self.speech.say("\\rspd=30\\ \\vct=50\\ die ")
-            time.sleep(1.0)
-            self.motion.setAngles("HeadPitch", 0.2, 0.1)  # Лёгкий наклон вниз
-            self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возврат головы в центр
 
-            self.speech.say("\\rspd=30\\ \\vct=50\\ die St... ")
-            self.speech.say("\\rspd=30\\ \\vct=50\\ die Stimm ")
-            self.speech.say("\\rspd=30\\ \\vct=50\\ die Stimmen ")
+            self.say_or_log("\\rspd=30\\ \\vct=50\\ d... ")
+            self.say_or_log("\\rspd=30\\ \\vct=50\\ die ")
             time.sleep(1.0)
 
-            self.motion.setAngles("HeadYaw", 0.0, 0.1)
+            if not self.is_virtual:
+                self.motion.setAngles("HeadPitch", 0.2, 0.1)  # Лёгкий наклон вниз
+                self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возврат головы в центр
+
+            self.say_or_log("\\rspd=30\\ \\vct=50\\ die St... ")
+            self.say_or_log("\\rspd=30\\ \\vct=50\\ die Stimm ")
+            self.say_or_log("\\rspd=30\\ \\vct=50\\ die Stimmen ")
             time.sleep(1.0)
 
             self.logger.info("MyClass", "Робот завершил читать фразу")
         except Exception as e:
             self.logger.error("MyClass", "Ошибка при попытке прочитать слово: " + str(e))
 
-    # def listen_and_repeat(self):
-    #     try:
-    #         self.simulate_listening()
-    #         self.speech.say("Hallo! Bitte sage etwas, und ich werde versuchen, es zu verstehen.")
-    #         time.sleep(1)  # Пауза перед активацией слушания
-
-    #         self.speech_recognition.subscribe("RepeatListener")
-    #         time.sleep(5)  # Время прослушивания
-    #         data = self.memory.getData("WordRecognized")
-    #         self.speech_recognition.unsubscribe("RepeatListener")
-
-    #         if data and len(data) > 0:
-    #             recognized_word = data[0]
-    #             confidence = data[1] if len(data) > 1 else 0.0
-
-    #             if confidence > 0.3:
-    #                 if recognized_word in self.word_dict:
-    #                     self.speech.say(self.word_dict[recognized_word])
-    #                 else:
-    #                     self.speech.say("Entschuldigung, ich kenne dieses Wort nicht.")
-    #             else:
-    #                 self.speech.say("Entschuldigung, ich bin mir nicht sicher, was du gesagt hast.")
-    #         else:
-    #             self.speech.say("Entschuldigung, ich habe nichts gehört.")
-    #     except Exception as e:
-    #         self.logger.error("Ошибка при прослушивании и повторении: " + str(e))
-
     def onInput_onStart(self):
         try:
-            self.logger.info("Запуск блока.")
+            self.logger.info("MyClass", "Запуск блока.")
             self.reset_to_initial_pose()
-            #self.listen_and_repeat()
             self.first_word()
         except Exception as e:
-            self.logger.error("Ошибка при запуске: " + str(e))
+            self.logger.error("MyClass", "Ошибка при запуске: " + str(e))
         finally:
             self.onStopped()
 
     def onInput_onStop(self):
-        try:
-            self.speech_recognition.unsubscribe("RepeatListener")
-            self.logger.info("Распознавание отключено.")
-        except Exception as e:
-            self.logger.error("Ошибка при остановке: " + str(e))
-        finally:
-            self.onStopped()]]>
+        self.logger.info("MyClass", "Принудительная остановка блока.")
+        self.onStopped()]]>
                 </content>
               </script>
               <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
@@ -540,9 +403,9 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
+            <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="3" indexofinput="2" outputowner="4" indexofoutput="4" />
             <Link inputowner="0" indexofinput="4" outputowner="3" indexofoutput="4" />
-            <Link inputowner="4" indexofinput="2" outputowner="0" indexofoutput="2" />
-            <Link inputowner="0" indexofinput="4" outputowner="4" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>
