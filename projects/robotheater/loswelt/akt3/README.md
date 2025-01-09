@@ -49,7 +49,7 @@
    - The main character actively engaging with ClickBot.  
    - Mimics ClickBot’
 
-
+#
 
 ### **Акт 3: Руины города (NAO и ClickBot)**
 
