@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ChoregrapheProject xmlns="http://www.ald.softbankrobotics.com/schema/choregraphe/project.xsd" xar_version="3">
+  <Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0">
+    <bitmap>media/images/box/root.png</bitmap>
+    <script language="4">
+      <content>
+        <![CDATA[]]>
+      </content>
+    </script>
+    <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+    <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+    <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+    <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+    <Timeline enable="0">
+      <BehaviorLayer name="behavior_layer1">
+        <BehaviorKeyframe name="keyframe1" index="1">
+          <Diagram>
+            <Box name="Trick" id="1" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="231" y="304">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import time
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.motion = None
+        self.posture = None
+        self.speech = None
+        self.logger = None
+
+    def onLoad(self):
+        try:
+            self.logger = self.session().service("ALLogger")
+            self.logger.info("MyClass", "Блок загружен и готов к работе.")
+
+            # Инициализация сервисов
+            self.motion = self.session().service("ALMotion")
+            self.posture = self.session().service("ALRobotPosture")
+            self.speech = self.session().service("ALTextToSpeech")
+        except Exception as e:
+            if self.logger:
+                self.logger.error("MyClass", "Ошибка при загрузке: " + str(e))
+
+    def reset_to_initial_pose(self):
+        """Возвращаем NAO в начальную позу Stand."""
+        try:
+            self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
+            self.posture.goToPosture("Stand", 0.8)
+            time.sleep(0.5)
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при возврате в позу Stand: " + str(e))
+
+    def track_dash(self):
+        """Скрипт для следящего взгляда NAO за Dash."""
+        try:
+            self.logger.info("MyClass", "Начало слежения за Dash.")
+
+            # NAO смотрит направо вниз
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [-0.5, 0.3], 0.1)
+            time.sleep(2)
+
+            # Следящий взгляд влево
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.1, 0.0], 0.05)
+            time.sleep(0.5)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.2, 0.0], 0.05)
+            time.sleep(0.5)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.3, 0.2], 0.05)
+            time.sleep(0.5)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.4, 0.0], 0.05)
+            time.sleep(0.5)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.5, 0.1], 0.05)
+            time.sleep(25)
+
+            # Возвращение головы в центр
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.0, 0.0], 0.1)
+            self.logger.info("MyClass", "Слежение завершено.")
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при слежении за Dash: " + str(e))
+
+    def onInput_onStart(self):
+        try:
+            self.logger.info("MyClass", "Запуск скрипта слежения за Dash.")
+            self.reset_to_initial_pose()
+            self.track_dash()
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при выполнении: " + str(e))
+        finally:
+            self.onStopped()
+
+    def onInput_onStop(self):
+        self.logger.info("MyClass", "Принудительная остановка блока.")
+        self.onStopped()]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Box name="moving" id="2" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="457" y="308">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import time
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.motion = None
+        self.posture = None
+        self.bIsRunning = False  # Флаг выполнения
+
+    def onLoad(self):
+        self.motion = self.session().service("ALMotion")
+        self.posture = self.session().service("ALRobotPosture")
+
+    def onUnload(self):
+        if self.bIsRunning:
+            self.motion.stopMove()
+
+    def onInput_onStart(self):
+        if self.bIsRunning:
+            print("[WARNING] Движение уже выполняется")
+            return
+
+        self.bIsRunning = True
+        try:
+            # Убедиться, что робот стоит ровно
+            self.posture.goToPosture("StandInit", 0.7)
+            time.sleep(1)
+
+            # Включить стабильность шага
+            self.motion.moveInit()
+            self.motion.setWalkArmsEnabled(True, True)  # Включить движение рук для баланса
+            self.motion.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])  # Контроль контакта стоп
+
+            # Делает два шага вперед
+            for _ in range(2):
+                self.motion.moveTo(0.3, 0.0, 0.0)  # Шаг вперед на 30 см
+                time.sleep(1)
+
+            # Поворот налево
+            self.motion.moveTo(0.0, 0.0, 1.57)  # Поворот на 90 градусов налево
+            time.sleep(1)
+
+            # Делает ещё два шага вперед
+            for _ in range(1):
+                self.motion.moveTo(0.3, 0.0, 0.0)
+                time.sleep(1)
+
+        except Exception as e:
+            print("[ERROR] Ошибка во время выполнения: {}".format(e))
+        finally:
+            self.bIsRunning = False
+
+    def onInput_onStop(self):
+        self.onUnload()]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Box name="objekt" id="3" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="163" y="53">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import time
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.motion = None
+        self.posture = None
+        self.logger = None
+
+    def onLoad(self):
+        try:
+            self.logger = self.session().service("ALLogger")
+            self.logger.info("MyClass", "Блок загружен и готов к работе.")
+
+            # Инициализация сервисов
+            self.motion = self.session().service("ALMotion")
+            self.posture = self.session().service("ALRobotPosture")
+        except Exception as e:
+            if self.logger:
+                self.logger.error("MyClass", "Ошибка при загрузке: " + str(e))
+
+    def reset_to_initial_pose(self):
+        """Возвращаем NAO в начальную позу Stand."""
+        try:
+            self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
+            self.posture.goToPosture("Stand", 0.8)
+            time.sleep(0.5)
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при возврате в позу Stand: " + str(e))
+
+    def manipulate_object(self):
+        """NAO берет объект и перемещает его."""
+        try:
+            self.logger.info("MyClass", "Начало манипуляции с объектом.")
+
+            # Приседание для захвата объекта
+            self.logger.info("MyClass", "Робот приседает для захвата объекта.")
+            self.motion.angleInterpolationWithSpeed(["KneePitch", "HipPitch"], [1.2, -0.6], 0.2)
+            time.sleep(1)
+
+            # Подготовка рук к захвату
+            self.logger.info("MyClass", "Подготовка рук к захвату.")
+            self.motion.angleInterpolationWithSpeed([
+                "LShoulderPitch", "RShoulderPitch", "LShoulderRoll", "RShoulderRoll"
+            ], [0.8, 0.8, 0.2, -0.2], 0.2)
+            time.sleep(1)
+
+            # Сведение рук ближе друг к другу для захвата объекта
+            self.logger.info("MyClass", "Сведение рук для захвата объекта.")
+            self.motion.angleInterpolationWithSpeed([
+                "LElbowYaw", "RElbowYaw", "LElbowRoll", "RElbowRoll"
+            ], [-1.2, 1.2, -1.5, 1.5], 0.2)
+            time.sleep(1)
+
+            # Разжимание пальцев для захвата
+            self.logger.info("MyClass", "Разжимание пальцев для захвата.")
+            self.motion.openHand("LHand")
+            self.motion.openHand("RHand")
+            time.sleep(1)
+
+            # Сжимание пальцев для захвата объекта
+            self.logger.info("MyClass", "Сжимание пальцев для захвата объекта.")
+            self.motion.closeHand("LHand")
+            self.motion.closeHand("RHand")
+            time.sleep(1)
+
+            # Поднятие объекта и возврат в полусогнутое положение
+            self.logger.info("MyClass", "Поднятие объекта.")
+            self.motion.angleInterpolationWithSpeed(["KneePitch", "HipPitch"], [0.5, 0.0], 0.2)
+            time.sleep(1)
+
+            # Поворот туловища влево для перемещения объекта
+            self.logger.info("MyClass", "Разворот туловища влево для перемещения объекта.")
+            self.motion.angleInterpolationWithSpeed([
+                "LShoulderRoll", "RShoulderRoll", "TorsoYaw"
+            ], [0.1, -0.1, 0.785], 0.2)  # Поворот на 45 градусов
+            time.sleep(1)
+
+            # Опускание объекта
+            self.logger.info("MyClass", "Опускание объекта.")
+            self.motion.angleInterpolationWithSpeed([
+                "LShoulderPitch", "RShoulderPitch", "LShoulderRoll", "RShoulderRoll"
+            ], [1.5, 1.5, 0.0, 0.0], 0.2)
+            time.sleep(1)
+
+            # Разжимание пальцев для отпускания объекта
+            self.logger.info("MyClass", "Разжимание пальцев для отпускания объекта.")
+            self.motion.openHand("LHand")
+            self.motion.openHand("RHand")
+            time.sleep(1)
+
+            # Возврат в исходное положение
+            self.logger.info("MyClass", "Возврат в исходное положение.")
+            self.motion.angleInterpolationWithSpeed([
+                "KneePitch", "HipPitch", "TorsoYaw"
+            ], [0.0, 0.0, 0.0], 0.2)
+            time.sleep(1)
+
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при манипуляции с объектом: " + str(e))
+
+    def onInput_onStart(self):
+        try:
+            self.logger.info("MyClass", "Запуск манипуляции с объектом.")
+            self.reset_to_initial_pose()
+            self.manipulate_object()
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при выполнении: " + str(e))
+        finally:
+            self.onStopped()
+
+    def onInput_onStop(self):
+        self.logger.info("MyClass", "Принудительная остановка блока.")
+        self.onStopped()]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="0" indexofinput="4" outputowner="3" indexofoutput="4" />
+          </Diagram>
+        </BehaviorKeyframe>
+      </BehaviorLayer>
+    </Timeline>
+  </Box>
+</ChoregrapheProject>

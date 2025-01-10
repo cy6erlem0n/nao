@@ -36,13 +36,21 @@ class MyClass(GeneratedClass):
         try:
             self.logger.info("MyClass", "Начало слежения за Dash.")
 
-            # NAO смотрит налево вниз
+            # NAO смотрит направо вниз
             self.motion.setAngles(["HeadYaw", "HeadPitch"], [-0.5, 0.3], 0.1)
             time.sleep(2)
 
-            # Следящий взгляд вправо
-            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.5, 0.0], 0.1)
-            time.sleep(2)
+            # Следящий взгляд влево
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.1, 0.0], 0.05)
+            time.sleep(0.5)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.2, 0.0], 0.05)
+            time.sleep(0.5)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.3, 0.2], 0.05)
+            time.sleep(0.5)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.4, 0.0], 0.05)
+            time.sleep(0.5)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.5, 0.1], 0.05)
+            time.sleep(25)
 
             # Возвращение головы в центр
             self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.0, 0.0], 0.1)
