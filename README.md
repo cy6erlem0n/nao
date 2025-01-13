@@ -4,8 +4,9 @@
 # developing projekt - Robotheater
 #
 # plane:
-    -1. Check all 1 scene (nothing moving_on (def perform_swaying_effect())) 
-    2. Development of 2 scenes;
+    0. Fixing 1 scene(moving_on)
+    1. Developing 2 scene(synchronise with dash, fixing scripts after moved ); 
+    2. Development of 3 scenes;
     3. Reflecting on the interactions of a ClicBot;
     4. Scenario writing;
 # developing scene 1 (0 is ready)
