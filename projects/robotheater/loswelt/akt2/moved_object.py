@@ -36,7 +36,21 @@ class MyClass(GeneratedClass):
 
             # Приседание для захвата объекта
             self.logger.info("MyClass", "Робот приседает для захвата объекта.")
-            self.motion.angleInterpolationWithSpeed(["KneePitch", "HipPitch"], [1.2, -0.8], 0.2)
+            self.motion.angleInterpolationWithSpeed(["KneePitch", "HipPitch"], [1.2, -0.6], 0.2)
+            time.sleep(1)
+
+            # Подготовка рук к захвату
+            self.logger.info("MyClass", "Подготовка рук к захвату.")
+            self.motion.angleInterpolationWithSpeed([
+                "LShoulderPitch", "RShoulderPitch", "LShoulderRoll", "RShoulderRoll"
+            ], [0.8, 0.8, 0.2, -0.2], 0.2)
+            time.sleep(1)
+
+            # Сведение рук ближе друг к другу для захвата объекта
+            self.logger.info("MyClass", "Сведение рук для захвата объекта.")
+            self.motion.angleInterpolationWithSpeed([
+                "LElbowYaw", "RElbowYaw", "LElbowRoll", "RElbowRoll"
+            ], [-1.2, 1.2, -1.5, 1.5], 0.2)
             time.sleep(1)
 
             # Разжимание пальцев для захвата
@@ -45,43 +59,29 @@ class MyClass(GeneratedClass):
             self.motion.openHand("RHand")
             time.sleep(1)
 
-            # Подготовка рук к захвату
-            self.logger.info("MyClass", "Подготовка рук к захвату.")
-            self.motion.angleInterpolationWithSpeed([
-                "LShoulderPitch", "RShoulderPitch", "LShoulderRoll", "RShoulderRoll"
-            ], [0.8, 0.8, 0.1, -0.1], 0.2)
-            time.sleep(1)
-
-            # Сведение рук ближе друг к другу для захвата объекта
-            self.logger.info("MyClass", "Сведение рук для захвата объекта.")
-            self.motion.angleInterpolationWithSpeed([
-                "LElbowYaw", "RElbowYaw", "LElbowRoll", "RElbowRoll"
-            ], [-1.5, 1.5, -1.7, 1.7], 0.2)
-            time.sleep(1)
-
             # Сжимание пальцев для захвата объекта
             self.logger.info("MyClass", "Сжимание пальцев для захвата объекта.")
             self.motion.closeHand("LHand")
             self.motion.closeHand("RHand")
             time.sleep(1)
 
-            # Поднятие объекта
+            # Поднятие объекта и возврат в полусогнутое положение
             self.logger.info("MyClass", "Поднятие объекта.")
-            self.motion.angleInterpolationWithSpeed(["KneePitch", "HipPitch"], [0.6, -0.2], 0.2)
+            self.motion.angleInterpolationWithSpeed(["KneePitch", "HipPitch"], [0.5, 0.0], 0.2)
             time.sleep(1)
 
             # Поворот туловища влево для перемещения объекта
             self.logger.info("MyClass", "Разворот туловища влево для перемещения объекта.")
             self.motion.angleInterpolationWithSpeed([
                 "LShoulderRoll", "RShoulderRoll", "TorsoYaw"
-            ], [0.0, 0.0, 0.785], 0.2)  # Поворот на 45 градусов
+            ], [0.1, -0.1, 0.785], 0.2)  # Поворот на 45 градусов
             time.sleep(1)
 
             # Опускание объекта
             self.logger.info("MyClass", "Опускание объекта.")
             self.motion.angleInterpolationWithSpeed([
-                "KneePitch", "HipPitch"
-            ], [1.2, -0.8], 0.2)
+                "LShoulderPitch", "RShoulderPitch", "LShoulderRoll", "RShoulderRoll"
+            ], [1.5, 1.5, 0.0, 0.0], 0.2)
             time.sleep(1)
 
             # Разжимание пальцев для отпускания объекта

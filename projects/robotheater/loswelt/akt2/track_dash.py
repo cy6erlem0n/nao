@@ -41,7 +41,7 @@ class MyClass(GeneratedClass):
             time.sleep(2)
 
             # Следящий взгляд влево
-            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.1, 0.0], 0.05)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.1, 0.3], 0.05)
             time.sleep(0.5)
             self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.2, 0.0], 0.05)
             time.sleep(0.5)
@@ -50,8 +50,13 @@ class MyClass(GeneratedClass):
             self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.4, 0.0], 0.05)
             time.sleep(0.5)
             self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.5, 0.1], 0.05)
-            time.sleep(25)
-
+            time.sleep(26.5)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.5, -0.3], 0.1)
+            time.sleep(0.5)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.5, 0.3], 0.1)
+            time.sleep(0.5)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.5, 0.1], 0.1)
+            time.sleep(1)
             # Возвращение головы в центр
             self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.0, 0.0], 0.1)
             self.logger.info("MyClass", "Слежение завершено.")

@@ -45,11 +45,14 @@ class MyClass(GeneratedClass):
             for _ in range(1):
                 self.motion.moveTo(0.3, 0.0, 0.0)
                 time.sleep(1)
-
+            self.onStopped()
+            
         except Exception as e:
             print("[ERROR] Ошибка во время выполнения: {}".format(e))
         finally:
             self.bIsRunning = False
 
     def onInput_onStop(self):
+        self.logger.info("MyClass", "Принудительная остановка блока.")
         self.onUnload()
+        self.onStopped()

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package version="0.0.0" uuid="interaction_with_dash-9743be" installOnlyAtStartup="false">
+<package uuid="interaction_with_dash-9743be" installOnlyAtStartup="false" version="0.0.0">
  <names>
   <name lang="en_US">Untitled</name>
  </names>
