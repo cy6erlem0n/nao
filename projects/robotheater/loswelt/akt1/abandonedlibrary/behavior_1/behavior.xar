@@ -27,7 +27,7 @@
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Box name="moving" id="3" localization="8" tooltip="moving on next akt" x="701" y="145">
+            <Box name="moving" id="3" localization="8" tooltip="moving on next akt" x="648" y="136">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -217,11 +217,11 @@ class MyClass(GeneratedClass):
             self.motion.setAngles("HeadYaw", -0.1, 0.1)  # Легкий поворот головы влево
             time.sleep(1.0)
 
-            self.speech.say("\\rspd=30\\ \\vct=50\\ a... ")
+            self.speech.say("\\rspd=50\\ \\vct=70\\ a... ")
             time.sleep(1.0)
-            self.speech.say("\\rspd=30\\ \\vct=50\\ hmm... ")
+            self.speech.say("\\rspd=30\\ \\vct=70\\ hmm... ")
             time.sleep(1.0)
-            self.speech.say("\\rspd=40\\ \\vct=55\\ ehh... ")
+            self.speech.say("\\rspd=40\\ \\vct=70\\ ehh... ")
             time.sleep(1.5)
 
             self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возврат головы в центр
@@ -366,17 +366,17 @@ class MyClass(GeneratedClass):
         try:
             self.logger.info("MyClass", "Робот читает первое слово.")
 
-            self.say_or_log("\\rspd=30\\ \\vct=50\\ d... ")
-            self.say_or_log("\\rspd=30\\ \\vct=50\\ die ")
+            self.say_or_log("\\rspd=30\\ \\vct=70\\ d... ")
+            self.say_or_log("\\rspd=40\\ \\vct=70\\ die ")
             time.sleep(1.0)
 
             if not self.is_virtual:
                 self.motion.setAngles("HeadPitch", 0.2, 0.1)  # Лёгкий наклон вниз
                 self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возврат головы в центр
 
-            self.say_or_log("\\rspd=30\\ \\vct=50\\ die St... ")
-            self.say_or_log("\\rspd=30\\ \\vct=50\\ die Stimm ")
-            self.say_or_log("\\rspd=30\\ \\vct=50\\ die Stimmen ")
+            self.say_or_log("\\rspd=30\\ \\vct=70\\ die St... ")
+            self.say_or_log("\\rspd=40\\ \\vct=70\\ die Stimm ")
+            self.say_or_log("\\rspd=50\\ \\vct=70\\ die Stimmen ")
             time.sleep(1.0)
 
             self.logger.info("MyClass", "Робот завершил читать фразу")
@@ -406,6 +406,7 @@ class MyClass(GeneratedClass):
             <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
             <Link inputowner="3" indexofinput="2" outputowner="4" indexofoutput="4" />
             <Link inputowner="0" indexofinput="4" outputowner="3" indexofoutput="4" />
+            <Link inputowner="4" indexofinput="2" outputowner="1" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

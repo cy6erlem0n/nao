@@ -15,7 +15,7 @@
       <BehaviorLayer name="behavior_layer1">
         <BehaviorKeyframe name="keyframe1" index="1">
           <Diagram>
-            <Box name="main" id="1" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="532" y="111">
+            <Box name="main" id="1" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="477" y="71">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -58,13 +58,16 @@ class MyClass(GeneratedClass):
             self.logger.error("MyClass", "Ошибка в движении: " + str(e))
 
     def speak(self, text):
-        """Произносит текст."""
+        """Произносит текст с дружественным тоном."""
         try:
             self.logger.info("MyClass", "Начато произнесение текста: " + text)
-            self.speech.say(text)
+            # Обёртываем текст в параметры тона и скорости
+            formatted_text = "\\rspd=90\\ \\vct=75\\ " + text
+            self.speech.say(formatted_text)
             self.logger.info("MyClass", "Текст завершён.")
         except Exception as e:
             self.logger.error("MyClass", "Ошибка в речи: " + str(e))
+
 
     def onInput_onStart(self):
         if self.bIsRunning:
@@ -79,7 +82,7 @@ class MyClass(GeneratedClass):
             # Полный текст и соответствующие движения
             sequences = [
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Früher war diese Welt voller Klänge... Lachen, Stimmen, Musik – all das war ein Teil des Lebens.",
+                    "text": "Früher war diese Welt voller Klänge... \\pau=500\\ Lachen, Stimmen, Musik – all das war ein Teil des Lebens.",
                     "motions": {
                         "joints": ["LShoulderPitch", "RShoulderPitch"],
                         "angles": [0.4, 0.4],
@@ -87,7 +90,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Doch eines Tages änderte sich alles. Die Klänge verschwanden und hinterließen nichts als Stille.",
+                    "text": "Doch eines Tages änderte sich alles. \\pau=500\\ Die Klänge verschwanden und hinterließen nichts als Stille.",
                     "motions": {
                         "joints": ["HeadPitch"],
                         "angles": [0.3],
@@ -95,7 +98,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Niemand weiß, was der Grund für diesen Verlust war.",
+                    "text": "Niemand weiß, \\pau=300\\ was der Grund für diesen Verlust war.",
                     "motions": {
                         "joints": ["RShoulderRoll"],
                         "angles": [-0.3],
@@ -103,7 +106,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Die Menschen versuchten, das Verlorene wiederherzustellen, aber ohne Erfolg. Die Welt blieb stumm.",
+                    "text": "Die Menschen versuchten, das Verlorene wiederherzustellen, \\pau=500\\ aber ohne Erfolg.",
                     "motions": {
                         "joints": ["LShoulderRoll"],
                         "angles": [0.3],
@@ -111,7 +114,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Doch es heißt, es gibt einen Weg, die Klänge zurückzubringen.",
+                    "text": "Doch es heißt, \\pau=300\\ es gibt einen Weg, die Klänge zurückzubringen.",
                     "motions": {
                         "joints": ["HeadYaw"],
                         "angles": [0.3],
@@ -119,7 +122,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Heute beginnt eine Reise. Wir müssen die Klänge sammeln und das wiederherstellen, was verloren gegangen ist.",
+                    "text": "Heute beginnt eine Reise. \\pau=500\\ Wir müssen die Klänge sammeln und das wiederherstellen, \\pau=300\\ was verloren gegangen ist.",
                     "motions": {
                         "joints": ["RShoulderPitch"],
                         "angles": [0.5],
@@ -127,7 +130,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Taucht ein in die Stille... und seid bereit, der Welt ihre Stimme zurückzugeben.",
+                    "text": "Taucht ein in die Stille... \\pau=700\\ und seid bereit, der Welt ihre Stimme zurückzugeben.",
                     "motions": {
                         "joints": ["LShoulderPitch", "RShoulderPitch"],
                         "angles": [0.6, 0.6],
@@ -135,6 +138,7 @@ class MyClass(GeneratedClass):
                     }
                 }
             ]
+
 
             for sequence in sequences:
                 self.reset_to_initial_pose()
@@ -187,6 +191,23 @@ class MyClass(GeneratedClass):
         if self.bIsRunning:
             self.motion.stopMove()
 
+    def set_custom_stand(self):
+        """Устанавливает стартовую позицию с заданной шириной ног."""
+        try:
+            self.motion.angleInterpolationWithSpeed(
+                ["LHipYawPitch", "RHipYawPitch"],  # Угол бедер
+                [0.15, -0.15],  # Ширина
+                0.2
+            )
+            self.motion.angleInterpolationWithSpeed(
+                ["LHipRoll", "RHipRoll"],  # Роллы бедер
+                [0.1, -0.1],  # Легкий наклон для устойчивости
+                0.2
+            )
+            time.sleep(0.5)
+        except Exception as e:
+            print("[ERROR] Ошибка при настройке стартовой позиции: {}".format(e))
+
     def onInput_onStart(self):
         if self.bIsRunning:
             print("[WARNING] Движение уже выполняется")
@@ -194,14 +215,13 @@ class MyClass(GeneratedClass):
 
         self.bIsRunning = True
         try:
-            # Убедиться, что робот стоит ровно
+            # Переход в исходную позу StandInit
             self.posture.goToPosture("StandInit", 0.7)
             time.sleep(1)
 
-            # Настройка начальной стойки с увеличением ширины ног
-            self.motion.angleInterpolationWithSpeed(["LHipYawPitch", "RHipYawPitch"], [0.15, -0.15], 0.1)
-            self.motion.angleInterpolationWithSpeed(["LHipRoll", "RHipRoll"], [0.1, -0.1], 0.1)
-            time.sleep(0.5)
+            # Настройка стартовой позиции
+            print("[INFO] Настройка стартовой позиции")
+            self.set_custom_stand()
 
             # Включить стабильность шага
             self.motion.moveInit()
@@ -211,14 +231,14 @@ class MyClass(GeneratedClass):
             # Настройка первого шага для плавного старта
             self.motion.setMotionConfig([
                 ["MaxStepX", 0.02],  # Маленький шаг вперед
-                ["MaxStepY", 0.05],  # Широкий шаг для предотвращения столкновений ног
+                ["MaxStepY", 0.05],  # Широкий шаг
                 ["MaxStepFrequency", 0.2],  # Замедленный первый шаг
                 ["StepHeight", 0.015],  # Низкий подъем ноги
                 ["TorsoWx", 0.0]
             ])
 
             # Первый шаг вперед
-            self.motion.moveTo(0.1, 0.02, 0.0)  # Добавлена небольшая ширина для устойчивости
+            self.motion.moveTo(0.1, 0.02, 0.0)  # Шаг с небольшой шириной
             time.sleep(1)
 
             # Восстановление нормальных параметров для дальнейших шагов
@@ -253,7 +273,7 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Box name="Stand Up" id="3" localization="8" tooltip="the robot tries to stand up from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="115" y="54">
+            <Box name="Stand Up" id="3" localization="8" tooltip="the robot tries to stand up from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="123" y="212">
               <bitmap>media/images/box/movement/stand.png</bitmap>
               <script language="4">
                 <content>
@@ -333,9 +353,8 @@ class MyClass(GeneratedClass):
               <Resource name="All motors" type="Lock" timeout="0" />
             </Box>
             <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" />
-            <Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="2" />
-            <Link inputowner="2" indexofinput="2" outputowner="3" indexofoutput="4" />
-            <Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" />
+            <Link inputowner="1" indexofinput="2" outputowner="2" indexofoutput="4" />
+            <Link inputowner="2" indexofinput="2" outputowner="0" indexofoutput="2" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

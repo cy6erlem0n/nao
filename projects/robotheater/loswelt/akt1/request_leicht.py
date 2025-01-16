@@ -55,17 +55,17 @@ class MyClass(GeneratedClass):
         try:
             self.logger.info("MyClass", "Робот читает первое слово.")
 
-            self.say_or_log("\\rspd=30\\ \\vct=50\\ d... ")
-            self.say_or_log("\\rspd=30\\ \\vct=50\\ die ")
+            self.say_or_log("\\rspd=30\\ \\vct=70\\ d... ")
+            self.say_or_log("\\rspd=40\\ \\vct=70\\ die ")
             time.sleep(1.0)
 
             if not self.is_virtual:
                 self.motion.setAngles("HeadPitch", 0.2, 0.1)  # Лёгкий наклон вниз
                 self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возврат головы в центр
 
-            self.say_or_log("\\rspd=30\\ \\vct=50\\ die St... ")
-            self.say_or_log("\\rspd=30\\ \\vct=50\\ die Stimm ")
-            self.say_or_log("\\rspd=30\\ \\vct=50\\ die Stimmen ")
+            self.say_or_log("\\rspd=30\\ \\vct=70\\ die St... ")
+            self.say_or_log("\\rspd=40\\ \\vct=70\\ die Stimm ")
+            self.say_or_log("\\rspd=50\\ \\vct=70\\ die Stimmen ")
             time.sleep(1.0)
 
             self.logger.info("MyClass", "Робот завершил читать фразу")

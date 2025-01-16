@@ -37,13 +37,16 @@ class MyClass(GeneratedClass):
             self.logger.error("MyClass", "Ошибка в движении: " + str(e))
 
     def speak(self, text):
-        """Произносит текст."""
+        """Произносит текст с дружественным тоном."""
         try:
             self.logger.info("MyClass", "Начато произнесение текста: " + text)
-            self.speech.say(text)
+            # Обёртываем текст в параметры тона и скорости
+            formatted_text = "\\rspd=90\\ \\vct=75\\ " + text
+            self.speech.say(formatted_text)
             self.logger.info("MyClass", "Текст завершён.")
         except Exception as e:
             self.logger.error("MyClass", "Ошибка в речи: " + str(e))
+
 
     def onInput_onStart(self):
         if self.bIsRunning:
@@ -58,7 +61,7 @@ class MyClass(GeneratedClass):
             # Полный текст и соответствующие движения
             sequences = [
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Früher war diese Welt voller Klänge... Lachen, Stimmen, Musik – all das war ein Teil des Lebens.",
+                    "text": "Früher war diese Welt voller Klänge... \\pau=500\\ Lachen, Stimmen, Musik – all das war ein Teil des Lebens.",
                     "motions": {
                         "joints": ["LShoulderPitch", "RShoulderPitch"],
                         "angles": [0.4, 0.4],
@@ -66,7 +69,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Doch eines Tages änderte sich alles. Die Klänge verschwanden und hinterließen nichts als Stille.",
+                    "text": "Doch eines Tages änderte sich alles. \\pau=500\\ Die Klänge verschwanden und hinterließen nichts als Stille.",
                     "motions": {
                         "joints": ["HeadPitch"],
                         "angles": [0.3],
@@ -74,7 +77,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Niemand weiß, was der Grund für diesen Verlust war.",
+                    "text": "Niemand weiß, \\pau=300\\ was der Grund für diesen Verlust war.",
                     "motions": {
                         "joints": ["RShoulderRoll"],
                         "angles": [-0.3],
@@ -82,7 +85,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Die Menschen versuchten, das Verlorene wiederherzustellen, aber ohne Erfolg. Die Welt blieb stumm.",
+                    "text": "Die Menschen versuchten, das Verlorene wiederherzustellen, \\pau=500\\ aber ohne Erfolg.",
                     "motions": {
                         "joints": ["LShoulderRoll"],
                         "angles": [0.3],
@@ -90,7 +93,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Doch es heißt, es gibt einen Weg, die Klänge zurückzubringen.",
+                    "text": "Doch es heißt, \\pau=300\\ es gibt einen Weg, die Klänge zurückzubringen.",
                     "motions": {
                         "joints": ["HeadYaw"],
                         "angles": [0.3],
@@ -98,7 +101,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Heute beginnt eine Reise. Wir müssen die Klänge sammeln und das wiederherstellen, was verloren gegangen ist.",
+                    "text": "Heute beginnt eine Reise. \\pau=500\\ Wir müssen die Klänge sammeln und das wiederherstellen, \\pau=300\\ was verloren gegangen ist.",
                     "motions": {
                         "joints": ["RShoulderPitch"],
                         "angles": [0.5],
@@ -106,7 +109,7 @@ class MyClass(GeneratedClass):
                     }
                 },
                 {
-                    "text": "\\rspd=80\\ \\vct=70\\ Taucht ein in die Stille... und seid bereit, der Welt ihre Stimme zurückzugeben.",
+                    "text": "Taucht ein in die Stille... \\pau=700\\ und seid bereit, der Welt ihre Stimme zurückzugeben.",
                     "motions": {
                         "joints": ["LShoulderPitch", "RShoulderPitch"],
                         "angles": [0.6, 0.6],
@@ -114,6 +117,7 @@ class MyClass(GeneratedClass):
                     }
                 }
             ]
+
 
             for sequence in sequences:
                 self.reset_to_initial_pose()

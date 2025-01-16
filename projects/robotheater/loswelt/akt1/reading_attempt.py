@@ -55,11 +55,11 @@ class MyClass(GeneratedClass):
             self.motion.setAngles("HeadYaw", -0.1, 0.1)  # Легкий поворот головы влево
             time.sleep(1.0)
 
-            self.speech.say("\\rspd=30\\ \\vct=50\\ a... ")
+            self.speech.say("\\rspd=50\\ \\vct=70\\ a... ")
             time.sleep(1.0)
-            self.speech.say("\\rspd=30\\ \\vct=50\\ hmm... ")
+            self.speech.say("\\rspd=30\\ \\vct=70\\ hmm... ")
             time.sleep(1.0)
-            self.speech.say("\\rspd=40\\ \\vct=55\\ ehh... ")
+            self.speech.say("\\rspd=40\\ \\vct=70\\ ehh... ")
             time.sleep(1.5)
 
             self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возврат головы в центр
@@ -74,7 +74,7 @@ class MyClass(GeneratedClass):
         """Робот обращается к зрителям."""
         try:
             self.logger.info("MyClass", "Робот обращается к зрителям.")
-    
+
             # Указание на табличку ладонью вверх
             self.motion.angleInterpolationWithSpeed(
                 ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw"],
@@ -84,28 +84,27 @@ class MyClass(GeneratedClass):
             self.motion.openHand("RHand")  # Открыть ладонь
             time.sleep(2)  # Задержка для фиксации на табличке
             self.motion.closeHand("RHand")  # Закрыть ладонь
-    
+
             # Одобрительные кивки
             self.motion.setAngles("HeadPitch", -0.2, 0.1)  # Наклон вниз
             time.sleep(1.5)
-    
+
             self.motion.setAngles("HeadPitch", 0.2, 0.1)  # Подъем головы
             time.sleep(1.0)
-    
+
             self.motion.setAngles("HeadPitch", 0.3, 0.1)  # Поднятие головы
             time.sleep(0.3)
             self.motion.setAngles("HeadPitch", 0.1, 0.1)  # Небольшой наклон вниз
             time.sleep(0.3)
-    
+
             self.motion.setAngles("HeadPitch", 0.2, 0.1)  # Поднятие головы
             time.sleep(1.0)
-    
+
             self.motion.setAngles("HeadPitch", 0.0, 0.1)  # Возвращение в нейтральное положение
             self.logger.info("MyClass", "Робот завершил обращение к зрителям.")
         except Exception as e:
             self.logger.error("MyClass", "Ошибка при обращении к зрителям: " + str(e))
-    
-    
+
 
 
     def onInput_onStart(self):
@@ -124,6 +123,7 @@ class MyClass(GeneratedClass):
             self.follow_bluebot()
             self.read_word()
             self.address_audience()
+
             self.reset_to_initial_pose()
 
             self.onStopped()  # Сигнал завершения
