@@ -43,11 +43,11 @@ class MyClass(GeneratedClass):
             # Следящий взгляд влево
             self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.1, 0.3], 0.05)
             time.sleep(0.5)
-            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.2, 0.0], 0.05)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.2, 0.3], 0.05)
             time.sleep(0.5)
             self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.3, 0.2], 0.05)
             time.sleep(0.5)
-            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.4, 0.0], 0.05)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.4, 0.2], 0.05)
             time.sleep(0.5)
             self.motion.setAngles(["HeadYaw", "HeadPitch"], [0.5, 0.1], 0.05)
             time.sleep(26.5)

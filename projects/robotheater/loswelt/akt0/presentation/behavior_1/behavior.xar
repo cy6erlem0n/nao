@@ -44,7 +44,7 @@ class MyClass(GeneratedClass):
     def reset_to_initial_pose(self):
         """Возвращаем NAO в начальную позу Stand."""
         self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
-        self.posture.goToPosture("Stand", 0.8)  # Используем "Stand" для более прямой позы
+        self.posture.goToPosture("Stand", 0.6)  # Используем "Stand" для более прямой позы
         time.sleep(0.5)
 
     def perform_motion(self, joints, angles, speed):

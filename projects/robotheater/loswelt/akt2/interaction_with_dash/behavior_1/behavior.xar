@@ -104,7 +104,7 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Box name="moving" id="2" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="457" y="308">
+            <Box name="moving" id="2" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="388" y="413">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -126,6 +126,23 @@ class MyClass(GeneratedClass):
         if self.bIsRunning:
             self.motion.stopMove()
 
+    def set_custom_stand(self):
+        """Устанавливает стартовую позицию с заданной шириной ног."""
+        try:
+            self.motion.angleInterpolationWithSpeed(
+                ["LHipYawPitch", "RHipYawPitch"],  # Угол бедер
+                [0.15, -0.15],  # Ширина ног
+                0.2
+            )
+            self.motion.angleInterpolationWithSpeed(
+                ["LHipRoll", "RHipRoll"],  # Роллы бедер
+                [0.1, -0.1],  # Легкий наклон для устойчивости
+                0.2
+            )
+            time.sleep(0.5)
+        except Exception as e:
+            print("[ERROR] Ошибка при настройке стартовой позиции: {}".format(e))
+
     def onInput_onStart(self):
         if self.bIsRunning:
             print("[WARNING] Движение уже выполняется")
@@ -133,28 +150,57 @@ class MyClass(GeneratedClass):
 
         self.bIsRunning = True
         try:
-            # Убедиться, что робот стоит ровно
+            # Переход в исходную позу StandInit
             self.posture.goToPosture("StandInit", 0.7)
             time.sleep(1)
+
+            # Настройка стартовой позиции
+            print("[INFO] Настройка стартовой позиции")
+            self.set_custom_stand()
 
             # Включить стабильность шага
             self.motion.moveInit()
             self.motion.setWalkArmsEnabled(True, True)  # Включить движение рук для баланса
             self.motion.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])  # Контроль контакта стоп
 
-            # Делает два шага вперед
-            for _ in range(2):
-                self.motion.moveTo(0.3, 0.0, 0.0)  # Шаг вперед на 30 см
-                time.sleep(1)
+            # Настройка первого шага для плавного старта
+            self.motion.setMotionConfig([
+                ["MaxStepX", 0.02],  # Маленький шаг вперед
+                ["MaxStepY", 0.05],  # Широкий шаг
+                ["MaxStepFrequency", 0.2],  # Замедленный первый шаг
+                ["StepHeight", 0.015],  # Низкий подъем ноги
+                ["TorsoWx", 0.0]
+            ])
 
-            # Поворот налево
-            self.motion.moveTo(0.0, 0.0, 1.57)  # Поворот на 90 градусов налево
+            # Первый шаг вперед
+            self.motion.moveTo(0.1, 0.02, 0.0)
             time.sleep(1)
 
-            # Делает ещё два шага вперед
-            for _ in range(1):
+            # Восстановление нормальных параметров для дальнейших шагов
+            self.motion.setMotionConfig([
+                ["MaxStepX", 0.04],
+                ["MaxStepY", 0.03],
+                ["MaxStepFrequency", 0.4],
+                ["StepHeight", 0.02],
+                ["TorsoWx", 0.0]
+            ])
+
+            # Два шага вперед
+            for _ in range(2):
                 self.motion.moveTo(0.3, 0.0, 0.0)
                 time.sleep(1)
+
+            # Плавный поворот налево
+            self.motion.moveTo(0.0, 0.0, 0.785)  # Половина поворота
+            time.sleep(1)
+            self.motion.moveTo(0.0, 0.0, 0.785)  # Оставшаяся половина поворота
+            time.sleep(1)
+
+            # Два шага вперед
+            for _ in range(2):
+                self.motion.moveTo(0.3, 0.0, 0.0)
+                time.sleep(1)
+
             self.onStopped()
 
         except Exception as e:
@@ -173,7 +219,7 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Box name="objekt" id="3" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="490" y="153">
+            <Box name="objekt" id="3" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="315" y="221">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -339,7 +385,7 @@ class MyClass(GeneratedClass):
               <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="5" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
               <Parameter name="Trigger timerOutput if cancelled" inherits_from_parent="0" content_type="0" value="0" default_value="1" tooltip="If the box is currently waiting and cancelled, output will be stimulated." id="6" />
             </Box>
-            <Box name="Stand Up" id="4" localization="8" tooltip="the robot tries to stand up from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="159" y="210">
+            <Box name="Stand Up" id="4" localization="8" tooltip="the robot tries to stand up from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="94" y="208">
               <bitmap>media/images/box/movement/stand.png</bitmap>
               <script language="4">
                 <content>
@@ -418,11 +464,120 @@ class MyClass(GeneratedClass):
               </Timeline>
               <Resource name="All motors" type="Lock" timeout="0" />
             </Box>
+            <Box name="objekt leicht" id="5" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="520" y="192">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import time
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.motion = None
+        self.posture = None
+        self.logger = None
+
+    def onLoad(self):
+        try:
+            self.logger = self.session().service("ALLogger")
+            self.logger.info("MyClass", "Блок загружен и готов к работе.")
+
+            # Инициализация сервисов
+            self.motion = self.session().service("ALMotion")
+            self.posture = self.session().service("ALRobotPosture")
+        except Exception as e:
+            if self.logger:
+                self.logger.error("MyClass", "Ошибка при загрузке: " + str(e))
+
+    def reset_to_initial_pose(self):
+        """Возвращаем NAO в начальную позу Stand."""
+        try:
+            self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
+            self.posture.goToPosture("StandInit", 0.7)
+            time.sleep(0.5)
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при возврате в позу Stand: " + str(e))
+
+    def push_object(self):
+        """NAO выполняет толчок руками."""
+        try:
+            self.logger.info("MyClass", "Начало манипуляции с предметом.")
+
+            # Приседание для сближения с объектом
+            self.logger.info("MyClass", "Робот приседает.")
+            self.motion.angleInterpolationWithSpeed([
+                "KneePitch", "HipPitch", "AnklePitch"
+            ], [1.0, -0.5, 0.3], 0.2)  # Приседание
+            time.sleep(1)
+
+            # Подготовка рук для толчка
+            self.logger.info("MyClass", "Подготовка рук.")
+            self.motion.angleInterpolationWithSpeed([
+                "LShoulderPitch", "RShoulderPitch", "LShoulderRoll", "RShoulderRoll"
+            ], [0.4, 0.4, 0.1, -0.1], 0.2)  # Руки перед собой
+            time.sleep(0.5)
+
+            # Разжимание пальцев
+            self.logger.info("MyClass", "Разжимание пальцев.")
+            self.motion.openHand("LHand")
+            self.motion.openHand("RHand")
+            time.sleep(0.5)
+
+            # Толчок двумя руками вперед
+            self.logger.info("MyClass", "Толчок руками.")
+            self.motion.angleInterpolationWithSpeed([
+                "LShoulderPitch", "RShoulderPitch"
+            ], [0.2, 0.2], 0.3)  # Толчок
+            time.sleep(1)
+
+            # Сжатие пальцев после толчка
+            self.logger.info("MyClass", "Сжатие пальцев.")
+            self.motion.closeHand("LHand")
+            self.motion.closeHand("RHand")
+            time.sleep(0.5)
+
+            # Возвращение рук в исходное положение
+            self.logger.info("MyClass", "Возвращение рук в исходное положение.")
+            self.motion.angleInterpolationWithSpeed([
+                "LShoulderPitch", "RShoulderPitch", "LShoulderRoll", "RShoulderRoll"
+            ], [1.5, 1.5, 0.0, 0.0], 0.3)
+            time.sleep(0.5)
+
+            # Возвращение в стоячее положение
+            self.logger.info("MyClass", "Возвращение в стоячее положение.")
+            self.motion.angleInterpolationWithSpeed([
+                "KneePitch", "HipPitch", "AnklePitch"
+            ], [0.0, 0.0, 0.0], 0.2)
+            time.sleep(1)
+
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при манипуляции с предметом: " + str(e))
+
+    def onInput_onStart(self):
+        try:
+            self.logger.info("MyClass", "Запуск манипуляции с предметом.")
+            self.reset_to_initial_pose()
+            self.push_object()
+            self.reset_to_initial_pose()
+        except Exception as e:
+            self.logger.error("MyClass", "Ошибка при выполнении: " + str(e))
+        finally:
+            self.onStopped()
+
+    def onInput_onStop(self):
+        self.logger.info("MyClass", "Принудительная остановка блока.")
+        self.onStopped()]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
             <Link inputowner="1" indexofinput="2" outputowner="6" indexofoutput="4" />
-            <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" />
-            <Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" />
-            <Link inputowner="4" indexofinput="2" outputowner="0" indexofoutput="2" />
-            <Link inputowner="2" indexofinput="2" outputowner="4" indexofoutput="4" />
+            <Link inputowner="0" indexofinput="4" outputowner="5" indexofoutput="4" />
+            <Link inputowner="5" indexofinput="2" outputowner="0" indexofoutput="2" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

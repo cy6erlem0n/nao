@@ -24,8 +24,8 @@ class MyClass(GeneratedClass):
         """Возвращаем NAO в начальную позу Stand."""
         try:
             self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
-            self.posture.goToPosture("Stand", 0.8)  # Используем "Stand" для прямой позы
-            time.sleep(0.5)
+            self.posture.goToPosture("Stand", 0.6)  # Используем "Stand" для прямой позы
+            time.sleep(1)
         except Exception as e:
             self.logger.error("MyClass", "Ошибка при возврате в позу Stand: " + str(e))
 
@@ -33,9 +33,17 @@ class MyClass(GeneratedClass):
         """Робот следит за движением Bluebot."""
         try:
             self.logger.info("MyClass", "Робот начинает следить за Bluebot.")
-            self.motion.setAngles("HeadYaw", -0.5, 0.2)  # Поворот вправо
-            self.motion.setAngles("HeadPitch", 0.3, 0.1)  # Наклон головы вниз
-            time.sleep(2)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [-0.5, 0.3], 0.05)
+            time.sleep(1.7)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [-0.4, 0.3], 0.05)
+            time.sleep(1.7)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [-0.3, 0.3], 0.05)
+            time.sleep(1.7)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [-0.2, 0.3], 0.05)
+            time.sleep(1.7)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [-0.1, 0.3], 0.05)
+            time.sleep(1.7)
+            self.motion.setAngles(["HeadYaw", "HeadPitch"], [0, 0.3], 0.1)
 
             self.motion.setAngles("HeadYaw", 0.0, 0.05)  # Возврат головы в центр
             time.sleep(4)
