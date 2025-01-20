@@ -24,53 +24,42 @@ class MyClass(GeneratedClass):
         """Возвращаем NAO в начальную позу Stand."""
         try:
             self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
-            self.posture.goToPosture("StandInit", 0.7)
+            self.posture.goToPosture("StandInit", 0.6)
             time.sleep(0.5)
         except Exception as e:
             self.logger.error("MyClass", "Ошибка при возврате в позу Stand: " + str(e))
 
     def knock_object(self):
-        """NAO толкает предмет перед собой."""
+        """NAO ударяет предмет перед собой."""
         try:
             self.logger.info("MyClass", "Начало манипуляции с предметом.")
 
-            # Приседание для сближения с объектом
+            # Приседание для подготовки
             self.logger.info("MyClass", "Робот приседает.")
             self.motion.angleInterpolationWithSpeed([
                 "KneePitch", "HipPitch"
-            ], [1.0, -0.6], 0.2)  # Приседание
+            ], [1.2, -0.4], 0.3)  # Приседание
             time.sleep(1)
 
-            # Подготовка рук для толчка
-            self.logger.info("MyClass", "Подготовка рук для толчка.")
+            # Подготовка рук для удара (отведение назад)
+            self.logger.info("MyClass", "Подготовка рук для удара.")
             self.motion.angleInterpolationWithSpeed([
                 "LShoulderPitch", "RShoulderPitch", "LShoulderRoll", "RShoulderRoll",
                 "LElbowYaw", "RElbowYaw", "LElbowRoll", "RElbowRoll"
             ], [
-                0.8, 0.8, 0.1, -0.1, -1.2, 1.2, -0.5, 0.5
-            ], 0.2)  # Руки перед собой, близко друг к другу
+                1.5, 1.5, 0.2, -0.2, -1.3, 1.3, -0.5, 0.5
+            ], 0.2)
             time.sleep(0.5)
 
-            # Разжимание пальцев
-            self.logger.info("MyClass", "Разжимание пальцев.")
-            self.motion.openHand("LHand")
-            self.motion.openHand("RHand")
-            time.sleep(0.5)
-
-            # Толчок двумя руками вперед
-            self.logger.info("MyClass", "Толчок предмета.")
+            # Удар вперед
+            self.logger.info("MyClass", "Удар предмета.")
             self.motion.angleInterpolationWithSpeed([
-                "LShoulderPitch", "RShoulderPitch", "LElbowRoll", "RElbowRoll"
+                "LShoulderPitch", "RShoulderPitch", "LShoulderRoll", "RShoulderRoll",
+                "LElbowRoll", "RElbowRoll"
             ], [
-                0.4, 0.4, -0.3, 0.3
-            ], 0.3)  # Толчок
+                0.3, 0.3, 0.0, 0.0, -1.0, 1.0
+            ], 0.3)  # Удар вперед
             time.sleep(1)
-
-            # Сжатие пальцев
-            self.logger.info("MyClass", "Сжатие пальцев.")
-            self.motion.closeHand("LHand")
-            self.motion.closeHand("RHand")
-            time.sleep(0.5)
 
             # Возвращение рук в исходное положение
             self.logger.info("MyClass", "Возвращение рук в исходное положение.")
@@ -86,7 +75,7 @@ class MyClass(GeneratedClass):
             self.logger.info("MyClass", "Возвращение в стоячее положение.")
             self.motion.angleInterpolationWithSpeed([
                 "KneePitch", "HipPitch"
-            ], [0.0, 0.0], 0.2)
+            ], [0.0, 0.0], 0.3)
             time.sleep(1)
 
         except Exception as e:

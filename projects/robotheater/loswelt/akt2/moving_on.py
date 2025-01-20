@@ -27,7 +27,7 @@ class MyClass(GeneratedClass):
         """Возвращаем NAO в начальную позу Stand."""
         try:
             self.logger.info("MyClass", "Возвращаем робота в позу Stand.")
-            self.posture.goToPosture("Stand", 0.8)  # Используем "Stand" для прямой позы
+            self.posture.goToPosture("Stand", 0.6)  # Используем "Stand" для прямой позы
             time.sleep(0.5)
         except Exception as e:
             self.logger.error("MyClass", "Ошибка при возврате в позу Stand: " + str(e))

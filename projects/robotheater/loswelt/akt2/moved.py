@@ -41,7 +41,7 @@ class MyClass(GeneratedClass):
         self.bIsRunning = True
         try:
             # Переход в исходную позу StandInit
-            self.posture.goToPosture("StandInit", 0.7)
+            self.posture.goToPosture("StandInit", 0.6)
             time.sleep(1)
 
             # Настройка стартовой позиции
@@ -87,7 +87,7 @@ class MyClass(GeneratedClass):
             time.sleep(1)
 
             # Два шага вперед
-            for _ in range(2):
+            for _ in range(1):
                 self.motion.moveTo(0.3, 0.0, 0.0)
                 time.sleep(1)
 
