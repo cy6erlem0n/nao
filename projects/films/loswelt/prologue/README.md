@@ -1,0 +1,1 @@
+# The voice-over tells us that after the big events the world has lost its sounds. In parallel the video sequence shows 3 different lands and different robot nations at the end of the prologue Nao wakes up. 
