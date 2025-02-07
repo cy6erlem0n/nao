@@ -1,0 +1,14 @@
+[
+    {
+        "title": "Die kleine Glühwürmchen",
+        "text": "\\rspd=90\\ \\vct=85\\ ^start(animations/Stand/Gestures/Explain_1) In einem dunklen Wald lebte ein kleines Glühwürmchen namens Lumi. \\pau=500\\ Lumi wollte genauso hell leuchten wie der große Mond. ^start(animations/Stand/Gestures/Think_1) Also flog es jede Nacht hoch in den Himmel und versuchte, den Mond zu erreichen. \\pau=500\\ Doch der Mond war zu weit weg. \\pau=300\\ ^start(animations/Stand/Gestures/No_1) Eines Tages sagte die weise Eule: 'Lumi, du musst nicht so hoch fliegen, um zu leuchten. Dein Licht ist schon wunderschön.' \\pau=500\\ ^start(animations/Stand/Gestures/Happy_1) Lumi verstand, dass es nicht darum ging, den größten Schein zu haben, sondern anderen Licht zu schenken."
+    },
+    {
+        "title": "Der sprechende Baum",
+        "text": "\\rspd=85\\ \\vct=80\\ ^start(animations/Stand/Gestures/Think_1) Im Herzen eines alten Waldes stand ein riesiger Baum, der sprechen konnte. \\pau=500\\ Die Tiere des Waldes kamen oft zu ihm, um Rat zu suchen. ^start(animations/Stand/Gestures/Explain_3) Eines Tages kam ein kleiner Hase und fragte: 'Wie kann ich mutiger sein?' \\pau=500\\ Der Baum lächelte und sagte: 'Mut bedeutet nicht, keine Angst zu haben, sondern trotzdem voranzugehen.' ^start(animations/Stand/Gestures/Happy_1) Der Hase hörte auf den Rat und sprang mit neuer Kraft durch den Wald. \\pau=500\\ Er wurde der mutigste Hase von allen."
+    },
+    {
+        "title": "Das verlorene Wolkenschaf",
+        "text": "\\rspd=90\\ \\vct=85\\ ^start(animations/Stand/Gestures/Explain_2) Hoch oben am Himmel lebte eine Herde Wolkenschafe. ^start(animations/Stand/Gestures/No_1) Eines Tages trieb der Wind ein kleines Schaf namens Fluff weit weg. \\pau=500\\ Es war ganz allein und hatte Angst. \\pau=500\\ ^start(animations/Stand/Gestures/Point_1) Doch dann kamen die Sonnenstrahlen und sagten: 'Wir helfen dir, den Weg zurückzufinden.' \\pau=500\\ ^start(animations/Stand/Gestures/Happy_1) Mit ihrer Wärme schoben sie Fluff zurück zu seiner Herde."
+    }
+]
