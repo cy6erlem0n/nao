@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Круги</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+    body {
+      background: #000;
+      color: #0f0;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 2rem;
+      height: 100vh;
+      margin: 0;
+      user-select: none;
+    }
+
+    .table {
+      width: 90%;
+      max-width: 800px;
+      border-collapse: collapse;
+    }
+
+    .header, .participant {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+      align-items: center;
+      width: 100%;
+      padding: 0.5rem 1rem;
+    }
+
+    .header {
+      font-size: 1.5rem;
+      border-bottom: 2px solid #0f0;
+    }
+
+    .participant {
+      font-size: 2.5rem;
+      border-bottom: 1px solid #0f0;
+    }
+
+    .pos, .name, .laps, .buttons {
+      padding: 0.2rem 0.5rem;
+    }
+
+    .laps {
+      text-align: center;
+    }
+    .buttons {
+      display: flex;
+      gap: 0.3rem;
+      justify-content: flex-end;
+    }
+
+    button {
+      font-size: 1rem;
+      padding: 0.1rem 0.4rem;
+      border: 1px solid #0f0;
+      border-radius: 0.3rem;
+      background: black;
+      color: #0f0;
+      cursor: pointer;
+      text-shadow: 0 0 3px #0f0;
+      transition: background 0.3s, transform 0.1s;
+      opacity: 0.7;
+    }
+    button:hover {
+      background: #030;
+      opacity: 1;
+    }
+    button:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+  <div class="table">
+    <div class="header">
+      <div class="pos">Position</div>
+      <div class="name">Name</div>
+      <div class="laps">Laps</div>
+      <div class="buttons"></div>
+    </div>
+    <div id="participants"></div>
+  </div>
+
+  <script>
+    let data = [
+      { name: "Dodde ", laps: 0 },
+      { name: "R34", laps: 0 },
+      { name: "Surp", laps: 0 },
+      { name: "Slyve", laps: 0 },
+    ];
+
+    function render() {
+      const sorted = [...data].sort((a, b) => b.laps - a.laps);
+      const container = document.getElementById('participants');
+      container.innerHTML = '';
+
+      sorted.forEach((p, index) => {
+        const div = document.createElement('div');
+        div.className = 'participant';
+        div.innerHTML = `
+          <div class="pos">${index + 1}</div>
+          <div class="name">${p.name}</div>
+          <div class="laps">${p.laps}</div>
+          <div class="buttons">
+            <button onclick="changeLaps('${p.name}', -1)">.</button>
+            <button onclick="changeLaps('${p.name}', 1)">.</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function changeLaps(name, delta) {
+      const index = data.findIndex(p => p.name === name);
+      if (index !== -1) {
+        data[index].laps = Math.max(0, data[index].laps + delta);
+        render();
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
