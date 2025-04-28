@@ -1,1 +1,0 @@
-# here you find robotheater project for Nao with other robots 
