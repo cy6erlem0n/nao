@@ -1182,11 +1182,7 @@ class MyClass(GeneratedClass):
             <Link inputowner="8" indexofinput="2" outputowner="5" indexofoutput="4" />
             <Link inputowner="10" indexofinput="2" outputowner="8" indexofoutput="4" />
             <Link inputowner="9" indexofinput="2" outputowner="10" indexofoutput="4" />
-            <Link inputowner="114" indexofinput="2" outputowner="0" indexofoutput="2" />
-            <Link inputowner="11" indexofinput="2" outputowner="114" indexofoutput="4" />
-            <Link inputowner="12" indexofinput="2" outputowner="11" indexofoutput="4" />
-            <Link inputowner="52" indexofinput="2" outputowner="12" indexofoutput="4" />
-            <Link inputowner="0" indexofinput="4" outputowner="52" indexofoutput="4" />
+            <Link inputowner="52" indexofinput="2" outputowner="0" indexofoutput="2" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>
