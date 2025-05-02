@@ -94,65 +94,7 @@
               </Timeline>
               <Resource name="All motors" type="Lock" timeout="0" />
             </Box>
-            <Box name="Move To" id="12" localization="8" tooltip="Make the robot move to a configured point relative to its current location." x="390" y="36">
-              <bitmap>media/images/box/movement/walk_forward.png</bitmap>
-              <script language="4">
-                <content>
-                  <![CDATA[
-class MyClass(GeneratedClass):
-    def __init__(self):
-        GeneratedClass.__init__(self, False)
-        self.positionErrorThresholdPos = 0.01
-        self.positionErrorThresholdAng = 0.03
-
-    def onLoad(self):
-        self.motion = self.session().service("ALMotion")
-
-    def onUnload(self):
-        self.motion.moveToward(0.0, 0.0, 0.0)
-
-    def onInput_onStart(self):
-        import almath
-        # The command position estimation will be set to the sensor position
-        # when the robot starts moving, so we use sensors first and commands later.
-        initPosition = almath.Pose2D(self.motion.getRobotPosition(True))
-        targetDistance = almath.Pose2D(self.getParameter("Distance X (m)"),
-            self.getParameter("Distance Y (m)"),
-            self.getParameter("Theta (deg)") * almath.PI / 180)
-        expectedEndPosition = initPosition * targetDistance
-        enableArms = self.getParameter("Arms movement enabled")
-        self.motion.setMoveArmsEnabled(enableArms, enableArms)
-        self.motion.moveTo(self.getParameter("Distance X (m)"),
-            self.getParameter("Distance Y (m)"),
-            self.getParameter("Theta (deg)") * almath.PI / 180)
-
-        # The move is finished so output
-        realEndPosition = almath.Pose2D(self.motion.getRobotPosition(False))
-        positionError = realEndPosition.diff(expectedEndPosition)
-        positionError.theta = almath.modulo2PI(positionError.theta)
-        if (abs(positionError.x) < self.positionErrorThresholdPos
-            and abs(positionError.y) < self.positionErrorThresholdPos
-            and abs(positionError.theta) < self.positionErrorThresholdAng):
-            self.onArrivedAtDestination()
-        else:
-            self.onStoppedBeforeArriving(positionError.toVector())
-
-    def onInput_onStop(self):
-        self.onUnload()]]>
-                </content>
-              </script>
-              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
-              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-              <Output name="onArrivedAtDestination" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when the robot arrives at its destination." id="4" />
-              <Output name="onStoppedBeforeArriving" type="0" type_size="1" nature="1" inner="0" tooltip="Signal sent when the robot stops before arriving to its destination. Returns a vector [x (m), y (m), theta(rad)] with the remaining distance up to the destination. This distance is expressed in the ROBOT frame." id="5" />
-              <Parameter name="Distance X (m)" inherits_from_parent="0" content_type="2" value="1" default_value="0.2" min="-5" max="10" tooltip="The distance in meters for forward/backward motion. Positive value&#x0A;means forward, negative value means backward." id="6" />
-              <Parameter name="Distance Y (m)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-5" max="5" tooltip="The distance in meters for lateral motion. Positive value means left, negative&#x0A;value means right." id="7" />
-              <Parameter name="Theta (deg)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-180" max="180" tooltip="The orientation in degrees for final rotation. Positive value means anticlockwise,&#x0A;negative value means clockwise." id="8" />
-              <Parameter name="Arms movement enabled" inherits_from_parent="0" content_type="0" value="1" default_value="1" tooltip="Enables natural motion of the arms." id="9" />
-              <Resource name="Legs" type="Lock" timeout="0" />
-            </Box>
-            <Box name="Wait" id="33" localization="8" tooltip="Wait a moment before sending a signal on the output. &#x0A;Can be stopped anytime. &#x0A;Stimulating the input again before output is activated restarts the waiting period.&#x0A;" x="574" y="39">
+            <Box name="Wait" id="33" localization="8" tooltip="Wait a moment before sending a signal on the output. &#x0A;Can be stopped anytime. &#x0A;Stimulating the input again before output is activated restarts the waiting period.&#x0A;" x="574" y="19">
               <bitmap>media/images/box/wait.png</bitmap>
               <script language="4">
                 <content>
@@ -192,41 +134,7 @@ class MyClass(GeneratedClass):
               <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="5" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
               <Parameter name="Trigger timerOutput if cancelled" inherits_from_parent="0" content_type="0" value="0" default_value="1" tooltip="If the box is currently waiting and cancelled, output will be stimulated." id="6" />
             </Box>
-            <Box name="LifeModulAn" id="37" localization="8" tooltip="anfang Life Module" x="715" y="193">
-              <bitmap>media/images/box/box-python-script.png</bitmap>
-              <script language="4">
-                <content>
-                  <![CDATA[class MyClass(GeneratedClass):
-    def __init__(self):
-        GeneratedClass.__init__(self, False)
-        self.life = None
-
-    def onLoad(self):
-        self.life = self.session().service("ALAutonomousLife")
-
-    def onInput_onStart(self):
-        self.life.setState("interactive")
-        self.onStopped()]]>
-                </content>
-              </script>
-              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
-            </Box>
-            <Box name="LifeModuleAb" id="38" localization="8" tooltip="Life Module wird beendet" x="1136" y="203">
-              <bitmap>media/images/box/box-python-script.png</bitmap>
-              <script language="4">
-                <content>
-                  <![CDATA[]]>
-                </content>
-              </script>
-              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
-            </Box>
-            <Box name="Wait (1)" id="39" localization="8" tooltip="Wait a moment before sending a signal on the output. &#x0A;Can be stopped anytime. &#x0A;Stimulating the input again before output is activated restarts the waiting period.&#x0A;" x="945" y="208">
+            <Box name="Wait (1)" id="39" localization="8" tooltip="Wait a moment before sending a signal on the output. &#x0A;Can be stopped anytime. &#x0A;Stimulating the input again before output is activated restarts the waiting period.&#x0A;" x="221" y="223">
               <bitmap>media/images/box/wait.png</bitmap>
               <script language="4">
                 <content>
@@ -263,10 +171,10 @@ class MyClass(GeneratedClass):
               <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Start the Wait box with the configured timeout value." id="2" />
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Stop the wait and stimulate the output." id="3" />
               <Output name="timerOutput" type="1" type_size="1" nature="1" inner="0" tooltip="Send a bang once time set in parameters is elapsed, or if the box is stopped and the appropriate parameter is set." id="4" />
-              <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="5" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
+              <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="2" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
               <Parameter name="Trigger timerOutput if cancelled" inherits_from_parent="0" content_type="0" value="0" default_value="1" tooltip="If the box is currently waiting and cancelled, output will be stimulated." id="6" />
             </Box>
-            <Box name="Animated Say Text" id="36" localization="8" tooltip="Say the text received on its input and move during its speech.&#x0A;" x="471" y="232">
+            <Box name="Animated Say Text" id="36" localization="8" tooltip="Say the text received on its input and move during its speech.&#x0A;" x="742" y="230">
               <bitmap>media/images/box/interaction/say.png</bitmap>
               <script language="4">
                 <content>
@@ -328,7 +236,7 @@ class MyClass(GeneratedClass):
               </Parameter>
               <Resource name="Speech" type="Lock" timeout="0" />
             </Box>
-            <Box name="Text Edit" id="40" localization="8" tooltip="Send the text you entered when the input is stimulated." plugin="textedit_plugin" x="139" y="217">
+            <Box name="Text Edit" id="40" localization="8" tooltip="Send the text you entered when the input is stimulated." plugin="textedit_plugin" x="419" y="231">
               <bitmap>media/images/box/interaction/vocabulary.png</bitmap>
               <script language="4">
                 <content>
@@ -449,7 +357,7 @@ class MyClass(GeneratedClass):
               <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Start the Wait box with the configured timeout value." id="2" />
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Stop the wait and stimulate the output." id="3" />
               <Output name="timerOutput" type="1" type_size="1" nature="1" inner="0" tooltip="Send a bang once time set in parameters is elapsed, or if the box is stopped and the appropriate parameter is set." id="4" />
-              <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="5" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
+              <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="1" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
               <Parameter name="Trigger timerOutput if cancelled" inherits_from_parent="0" content_type="0" value="0" default_value="1" tooltip="If the box is currently waiting and cancelled, output will be stimulated." id="6" />
             </Box>
             <Box name="Animated Say Text (2)" id="45" localization="8" tooltip="Say the text received on its input and move during its speech.&#x0A;" x="1117" y="391">
@@ -524,12 +432,12 @@ class MyClass(GeneratedClass):
 		GeneratedClass.__init__(self)
 
 	def onInput_onStart(self):
-		self.onStopped("Ich suche na ja… etwas.")]]>
+		self.onStopped("Ich suche")]]>
                 </content>
               </script>
               <pluginContent>
                 <text>
-                  <![CDATA[Ich suche na ja… etwas.]]>
+                  <![CDATA[Ich suche]]>
                 </text>
               </pluginContent>
               <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
@@ -700,7 +608,7 @@ class MyClass(GeneratedClass):
               <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="1" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
               <Parameter name="Trigger timerOutput if cancelled" inherits_from_parent="0" content_type="0" value="0" default_value="1" tooltip="If the box is currently waiting and cancelled, output will be stimulated." id="6" />
             </Box>
-            <Box name="Text Edit (4)" id="2" localization="8" tooltip="Send the text you entered when the input is stimulated." plugin="textedit_plugin" x="726" y="35">
+            <Box name="Text Edit (4)" id="2" localization="8" tooltip="Send the text you entered when the input is stimulated." plugin="textedit_plugin" x="914" y="12">
               <bitmap>media/images/box/interaction/vocabulary.png</bitmap>
               <script language="4">
                 <content>
@@ -865,128 +773,601 @@ class MyClass(GeneratedClass):
               <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Start the Wait box with the configured timeout value." id="2" />
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Stop the wait and stimulate the output." id="3" />
               <Output name="timerOutput" type="1" type_size="1" nature="1" inner="0" tooltip="Send a bang once time set in parameters is elapsed, or if the box is stopped and the appropriate parameter is set." id="4" />
-              <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="1" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
+              <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="2" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
               <Parameter name="Trigger timerOutput if cancelled" inherits_from_parent="0" content_type="0" value="0" default_value="1" tooltip="If the box is currently waiting and cancelled, output will be stimulated." id="6" />
             </Box>
-            <Box name="turn" id="5" localization="8" tooltip="Nao turn self 180 grad nach &#x0A;recht" x="493" y="683">
-              <bitmap>media/images/box/movement/walk_forward.png</bitmap>
+            <Box name="OpenArmInFrontWithBump_01" id="7" localization="8" tooltip="ID : #01B 0005&#x0A;&#x0A;===================&#x0A;&#x0A;Tags : &#x0A;- You&#x0A;- Yourslef&#x0A;- Yours&#x0A;- Everybody&#x0A;&#x0A;===================&#x0A;&#x0A;Common dialog : No&#x0A;&#x0A;===================&#x0A;&#x0A;Start stance : Center&#x0A;End stance : Center" x="723" y="87">
+              <bitmap>media/images/box/movement/move.png</bitmap>
               <script language="4">
                 <content>
-                  <![CDATA[
+                  <![CDATA[]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+              <Timeline enable="1" fps="25" start_frame="1" end_frame="-1" size="25">
+                <ActuatorList model="">
+                  <ActuatorCurve name="value" actuator="HeadPitch" mute="0" unit="0">
+                    <Key frame="12" value="1.2" />
+                    <Key frame="21" value="-8.9" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="HeadYaw" mute="0" unit="0">
+                    <Key frame="21" value="0" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LAnklePitch" mute="0" unit="0">
+                    <Key frame="14" value="-5.01224" />
+                    <Key frame="25" value="4.8735" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LAnkleRoll" mute="0" unit="0">
+                    <Key frame="14" value="-7.02893" />
+                    <Key frame="25" value="-6.95974" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LElbowRoll" mute="0" unit="0">
+                    <Key frame="14" value="-57.303" />
+                    <Key frame="23" value="-23.7372" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LElbowYaw" mute="0" unit="0">
+                    <Key frame="14" value="-73.8315" />
+                    <Key frame="23" value="-94.6534" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LHand" mute="0" unit="1">
+                    <Key frame="14" value="0.3168" />
+                    <Key frame="23" value="0.72" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LHipPitch" mute="0" unit="0">
+                    <Key frame="14" value="-3.42537" />
+                    <Key frame="25" value="7.07525" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LHipRoll" mute="0" unit="0">
+                    <Key frame="14" value="5.3638" />
+                    <Key frame="25" value="5.66523" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LHipYawPitch" mute="0" unit="0">
+                    <Key frame="14" value="-12.654" />
+                    <Key frame="25" value="-9.74028" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LKneePitch" mute="0" unit="0">
+                    <Key frame="14" value="14.6755" />
+                    <Key frame="25" value="-4.64829" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LShoulderPitch" mute="0" unit="0">
+                    <Key frame="14" value="52.6447" />
+                    <Key frame="23" value="45.9525" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LShoulderRoll" mute="0" unit="0">
+                    <Key frame="14" value="8.17153" />
+                    <Key frame="23" value="14.4939" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LWristYaw" mute="0" unit="0">
+                    <Key frame="14" value="-53.7042" />
+                    <Key frame="23" value="-70.0963" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RAnklePitch" mute="0" unit="0">
+                    <Key frame="14" value="-2.98591" />
+                    <Key frame="25" value="4.8735" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RAnkleRoll" mute="0" unit="0">
+                    <Key frame="14" value="6.3306" />
+                    <Key frame="25" value="6.95974" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RElbowRoll" mute="0" unit="0">
+                    <Key frame="12" value="62.4055" />
+                    <Key frame="21" value="23.8086" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RElbowYaw" mute="0" unit="0">
+                    <Key frame="12" value="83.5826" />
+                    <Key frame="21" value="94.6534" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RHand" mute="0" unit="1">
+                    <Key frame="12" value="0.024" />
+                    <Key frame="21" value="0.72" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RHipPitch" mute="0" unit="0">
+                    <Key frame="14" value="-4.66066" />
+                    <Key frame="25" value="7.07525" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RHipRoll" mute="0" unit="0">
+                    <Key frame="14" value="-5.97423" />
+                    <Key frame="25" value="-5.66523" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RHipYawPitch" mute="0" unit="0">
+                    <Key frame="14" value="-12.654" />
+                    <Key frame="25" value="-9.74028" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RKneePitch" mute="0" unit="0">
+                    <Key frame="14" value="14.8561" />
+                    <Key frame="25" value="-4.64829" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RShoulderPitch" mute="0" unit="0">
+                    <Key frame="12" value="32.6981" />
+                    <Key frame="21" value="27.9395" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RShoulderRoll" mute="0" unit="0">
+                    <Key frame="12" value="-4.13332" />
+                    <Key frame="21" value="-14.4939" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RWristYaw" mute="0" unit="0">
+                    <Key frame="12" value="45.4376" />
+                    <Key frame="21" value="70.1928" />
+                  </ActuatorCurve>
+                </ActuatorList>
+              </Timeline>
+              <Resource name="Standing" type="Lock" timeout="1" />
+              <Resource name="All motors" type="Lock" timeout="1" />
+            </Box>
+            <Box name="move" id="31" localization="8" tooltip="moved and turn" x="707" y="675">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import time
+import almath
+
 class MyClass(GeneratedClass):
     def __init__(self):
-        GeneratedClass.__init__(self, False)
-        self.positionErrorThresholdPos = 0.01
-        self.positionErrorThresholdAng = 0.03
+        GeneratedClass.__init__(self)
+        self.motion = None
+        self.posture = None
+        self.bIsRunning = False
 
     def onLoad(self):
         self.motion = self.session().service("ALMotion")
+        self.posture = self.session().service("ALRobotPosture")
 
     def onUnload(self):
-        self.motion.moveToward(0.0, 0.0, 0.0)
+        if self.bIsRunning:
+            self.motion.stopMove()
+
+    def set_custom_stand(self):
+        try:
+            self.motion.angleInterpolationWithSpeed(
+                ["LHipYawPitch", "RHipYawPitch"], [0.15, -0.15], 0.2)
+            self.motion.angleInterpolationWithSpeed(
+                ["LHipRoll", "RHipRoll"], [0.1, -0.1], 0.2)
+            time.sleep(0.3)
+        except Exception as e:
+            print("[ERROR] Ошибка при установке позиции: {}".format(e))
 
     def onInput_onStart(self):
-        import almath
-        # The command position estimation will be set to the sensor position
-        # when the robot starts moving, so we use sensors first and commands later.
-        initPosition = almath.Pose2D(self.motion.getRobotPosition(True))
-        targetDistance = almath.Pose2D(self.getParameter("Distance X (m)"),
-            self.getParameter("Distance Y (m)"),
-            self.getParameter("Theta (deg)") * almath.PI / 180)
-        expectedEndPosition = initPosition * targetDistance
-        enableArms = self.getParameter("Arms movement enabled")
-        self.motion.setMoveArmsEnabled(enableArms, enableArms)
-        self.motion.moveTo(self.getParameter("Distance X (m)"),
-            self.getParameter("Distance Y (m)"),
-            self.getParameter("Theta (deg)") * almath.PI / 180)
+        if self.bIsRunning:
+            print("[WARNING] Уже выполняется")
+            return
 
-        # The move is finished so output
-        realEndPosition = almath.Pose2D(self.motion.getRobotPosition(False))
-        positionError = realEndPosition.diff(expectedEndPosition)
-        positionError.theta = almath.modulo2PI(positionError.theta)
-        if (abs(positionError.x) < self.positionErrorThresholdPos
-            and abs(positionError.y) < self.positionErrorThresholdPos
-            and abs(positionError.theta) < self.positionErrorThresholdAng):
-            self.onArrivedAtDestination()
-        else:
-            self.onStoppedBeforeArriving(positionError.toVector())
+        self.bIsRunning = True
+        try:
+            x = self.getParameter("Distance X (m)")
+            y = self.getParameter("Distance Y (m)")
+            theta_deg = self.getParameter("Theta (deg)")
+            theta = theta_deg * almath.PI / 180
+            enable_arms = self.getParameter("Arms movement enabled")
+
+            self.posture.goToPosture("StandInit", 0.6)
+            time.sleep(1)
+            self.set_custom_stand()
+
+            self.motion.moveInit()
+            self.motion.setWalkArmsEnabled(enable_arms, enable_arms)
+            self.motion.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])
+
+            # Настройка первого шага для плавного старта
+            self.motion.setMotionConfig([
+                ["MaxStepX", 0.02],
+                ["MaxStepY", 0.05],
+                ["MaxStepFrequency", 0.2],
+                ["StepHeight", 0.015],
+                ["TorsoWx", 0.0]
+            ])
+
+            # Первый шаг вперед
+            self.motion.moveTo(0.1, 0.02, 0.0)
+            time.sleep(1)
+
+            # Восстановление нормальных параметров для дальнейших шагов
+            self.motion.setMotionConfig([
+                ["MaxStepX", 0.04],
+                ["MaxStepY", 0.03],
+                ["MaxStepFrequency", 0.4],
+                ["StepHeight", 0.02],
+                ["TorsoWx", 0.0]
+            ])
+
+            # Основной шаг, заданный пользователем
+            self.motion.moveTo(x, y, theta)
+
+            self.onStopped()
+
+        except Exception as e:
+            print("[ERROR] {}".format(e))
+        finally:
+            self.bIsRunning = False
 
     def onInput_onStop(self):
-        self.onUnload()]]>
+        self.onUnload()
+        self.onStopped()]]>
                 </content>
               </script>
-              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
               <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-              <Output name="onArrivedAtDestination" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when the robot arrives at its destination." id="4" />
-              <Output name="onStoppedBeforeArriving" type="0" type_size="1" nature="1" inner="0" tooltip="Signal sent when the robot stops before arriving to its destination. Returns a vector [x (m), y (m), theta(rad)] with the remaining distance up to the destination. This distance is expressed in the ROBOT frame." id="5" />
-              <Parameter name="Distance X (m)" inherits_from_parent="0" content_type="2" value="0" default_value="0.2" min="-5" max="10" tooltip="The distance in meters for forward/backward motion. Positive value&#x0A;means forward, negative value means backward." id="6" />
-              <Parameter name="Distance Y (m)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-5" max="5" tooltip="The distance in meters for lateral motion. Positive value means left, negative&#x0A;value means right." id="7" />
-              <Parameter name="Theta (deg)" inherits_from_parent="0" content_type="2" value="180" default_value="0" min="-180" max="180" tooltip="The orientation in degrees for final rotation. Positive value means anticlockwise,&#x0A;negative value means clockwise." id="8" />
-              <Parameter name="Arms movement enabled" inherits_from_parent="0" content_type="0" value="1" default_value="1" tooltip="Enables natural motion of the arms." id="9" />
-              <Resource name="Legs" type="Lock" timeout="0" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+              <Parameter name="Distance X (m)" inherits_from_parent="0" content_type="2" value="0" default_value="0.3" min="-1" max="1" tooltip="" id="5" />
+              <Parameter name="Distance Y (m)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-0.3" max="0.3" tooltip="" id="6" />
+              <Parameter name="Theta (deg)" inherits_from_parent="0" content_type="2" value="180" default_value="0" min="-180" max="180" tooltip="" id="7" />
+              <Parameter name="Arms movement enabled" inherits_from_parent="0" content_type="0" value="1" default_value="1" tooltip="" id="8" />
             </Box>
-            <Box name="Move To 2" id="6" localization="8" tooltip="Make the robot move to a configured point relative to its current location." x="687" y="684">
-              <bitmap>media/images/box/movement/walk_forward.png</bitmap>
+            <Box name="move (1)" id="9" localization="8" tooltip="moved and turn" x="392" y="57">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
-                  <![CDATA[
+                  <![CDATA[from naoqi import ALProxy
+import time
+import almath
+
 class MyClass(GeneratedClass):
     def __init__(self):
-        GeneratedClass.__init__(self, False)
-        self.positionErrorThresholdPos = 0.01
-        self.positionErrorThresholdAng = 0.03
+        GeneratedClass.__init__(self)
+        self.motion = None
+        self.posture = None
+        self.bIsRunning = False
 
     def onLoad(self):
         self.motion = self.session().service("ALMotion")
+        self.posture = self.session().service("ALRobotPosture")
 
     def onUnload(self):
-        self.motion.moveToward(0.0, 0.0, 0.0)
+        if self.bIsRunning:
+            self.motion.stopMove()
+
+    def set_custom_stand(self):
+        try:
+            self.motion.angleInterpolationWithSpeed(
+                ["LHipYawPitch", "RHipYawPitch"], [0.15, -0.15], 0.2)
+            self.motion.angleInterpolationWithSpeed(
+                ["LHipRoll", "RHipRoll"], [0.1, -0.1], 0.2)
+            time.sleep(0.3)
+        except Exception as e:
+            print("[ERROR] Ошибка при установке позиции: {}".format(e))
 
     def onInput_onStart(self):
-        import almath
-        # The command position estimation will be set to the sensor position
-        # when the robot starts moving, so we use sensors first and commands later.
-        initPosition = almath.Pose2D(self.motion.getRobotPosition(True))
-        targetDistance = almath.Pose2D(self.getParameter("Distance X (m)"),
-            self.getParameter("Distance Y (m)"),
-            self.getParameter("Theta (deg)") * almath.PI / 180)
-        expectedEndPosition = initPosition * targetDistance
-        enableArms = self.getParameter("Arms movement enabled")
-        self.motion.setMoveArmsEnabled(enableArms, enableArms)
-        self.motion.moveTo(self.getParameter("Distance X (m)"),
-            self.getParameter("Distance Y (m)"),
-            self.getParameter("Theta (deg)") * almath.PI / 180)
+        if self.bIsRunning:
+            print("[WARNING] Уже выполняется")
+            return
 
-        # The move is finished so output
-        realEndPosition = almath.Pose2D(self.motion.getRobotPosition(False))
-        positionError = realEndPosition.diff(expectedEndPosition)
-        positionError.theta = almath.modulo2PI(positionError.theta)
-        if (abs(positionError.x) < self.positionErrorThresholdPos
-            and abs(positionError.y) < self.positionErrorThresholdPos
-            and abs(positionError.theta) < self.positionErrorThresholdAng):
-            self.onArrivedAtDestination()
-        else:
-            self.onStoppedBeforeArriving(positionError.toVector())
+        self.bIsRunning = True
+        try:
+            x = self.getParameter("Distance X (m)")
+            y = self.getParameter("Distance Y (m)")
+            theta_deg = self.getParameter("Theta (deg)")
+            theta = theta_deg * almath.PI / 180
+            enable_arms = self.getParameter("Arms movement enabled")
+
+            self.posture.goToPosture("StandInit", 0.6)
+            time.sleep(1)
+            self.set_custom_stand()
+
+            self.motion.moveInit()
+            self.motion.setWalkArmsEnabled(enable_arms, enable_arms)
+            self.motion.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])
+
+            # Настройка первого шага для плавного старта
+            self.motion.setMotionConfig([
+                ["MaxStepX", 0.02],
+                ["MaxStepY", 0.05],
+                ["MaxStepFrequency", 0.2],
+                ["StepHeight", 0.015],
+                ["TorsoWx", 0.0]
+            ])
+
+            # Первый шаг вперед
+            self.motion.moveTo(0.1, 0.02, 0.0)
+            time.sleep(1)
+
+            # Восстановление нормальных параметров для дальнейших шагов
+            self.motion.setMotionConfig([
+                ["MaxStepX", 0.04],
+                ["MaxStepY", 0.03],
+                ["MaxStepFrequency", 0.4],
+                ["StepHeight", 0.02],
+                ["TorsoWx", 0.0]
+            ])
+
+            # Основной шаг, заданный пользователем
+            self.motion.moveTo(x, y, theta)
+
+            self.onStopped()
+
+        except Exception as e:
+            print("[ERROR] {}".format(e))
+        finally:
+            self.bIsRunning = False
 
     def onInput_onStop(self):
+        self.onUnload()
+        self.onStopped()]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+              <Parameter name="Distance X (m)" inherits_from_parent="0" content_type="2" value="0.3" default_value="0.3" min="-1" max="1" tooltip="" id="5" />
+              <Parameter name="Distance Y (m)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-0.3" max="0.3" tooltip="" id="6" />
+              <Parameter name="Theta (deg)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-180" max="180" tooltip="" id="7" />
+              <Parameter name="Arms movement enabled" inherits_from_parent="0" content_type="0" value="1" default_value="1" tooltip="" id="8" />
+            </Box>
+            <Box name="Wait (6)" id="8" localization="8" tooltip="Wait a moment before sending a signal on the output. &#x0A;Can be stopped anytime. &#x0A;Stimulating the input again before output is activated restarts the waiting period.&#x0A;" x="905" y="229">
+              <bitmap>media/images/box/wait.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self, False)
+
+    def onLoad(self):
+        self.waiting = None
+
+    def onUnload(self):
+        self.cancelWaiting()
+
+    def triggerOutput(self):
+        self.timerOutput()
+
+    def cancelWaiting(self):
+        if self.waiting:
+            self.waiting.cancel()
+        self.waiting = None
+
+    def onInput_onStart(self):
+        self.cancelWaiting()
+        import qi
+        self.waiting = qi.async(self.triggerOutput, delay=int(self.getParameter("Timeout (s)") * 1000 * 1000))
+
+    def onInput_onStop(self):
+        if self.getParameter("Trigger timerOutput if cancelled") and self.waiting and self.waiting.isRunning():
+            self.timerOutput()
         self.onUnload()]]>
                 </content>
               </script>
-              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Start the Wait box with the configured timeout value." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Stop the wait and stimulate the output." id="3" />
+              <Output name="timerOutput" type="1" type_size="1" nature="1" inner="0" tooltip="Send a bang once time set in parameters is elapsed, or if the box is stopped and the appropriate parameter is set." id="4" />
+              <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="2" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
+              <Parameter name="Trigger timerOutput if cancelled" inherits_from_parent="0" content_type="0" value="0" default_value="1" tooltip="If the box is currently waiting and cancelled, output will be stimulated." id="6" />
+            </Box>
+            <Box name="move (2)" id="5" localization="8" tooltip="moved and turn" x="894" y="673">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[from naoqi import ALProxy
+import time
+import almath
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.motion = None
+        self.posture = None
+        self.bIsRunning = False
+
+    def onLoad(self):
+        self.motion = self.session().service("ALMotion")
+        self.posture = self.session().service("ALRobotPosture")
+
+    def onUnload(self):
+        if self.bIsRunning:
+            self.motion.stopMove()
+
+    def set_custom_stand(self):
+        try:
+            self.motion.angleInterpolationWithSpeed(
+                ["LHipYawPitch", "RHipYawPitch"], [0.15, -0.15], 0.2)
+            self.motion.angleInterpolationWithSpeed(
+                ["LHipRoll", "RHipRoll"], [0.1, -0.1], 0.2)
+            time.sleep(0.3)
+        except Exception as e:
+            print("[ERROR] Ошибка при установке позиции: {}".format(e))
+
+    def onInput_onStart(self):
+        if self.bIsRunning:
+            print("[WARNING] Уже выполняется")
+            return
+
+        self.bIsRunning = True
+        try:
+            x = self.getParameter("Distance X (m)")
+            y = self.getParameter("Distance Y (m)")
+            theta_deg = self.getParameter("Theta (deg)")
+            theta = theta_deg * almath.PI / 180
+            enable_arms = self.getParameter("Arms movement enabled")
+
+            self.posture.goToPosture("StandInit", 0.6)
+            time.sleep(1)
+            self.set_custom_stand()
+
+            self.motion.moveInit()
+            self.motion.setWalkArmsEnabled(enable_arms, enable_arms)
+            self.motion.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])
+
+            # Настройка первого шага для плавного старта
+            self.motion.setMotionConfig([
+                ["MaxStepX", 0.02],
+                ["MaxStepY", 0.05],
+                ["MaxStepFrequency", 0.2],
+                ["StepHeight", 0.015],
+                ["TorsoWx", 0.0]
+            ])
+
+            # Первый шаг вперед
+            self.motion.moveTo(0.1, 0.02, 0.0)
+            time.sleep(1)
+
+            # Восстановление нормальных параметров для дальнейших шагов
+            self.motion.setMotionConfig([
+                ["MaxStepX", 0.04],
+                ["MaxStepY", 0.03],
+                ["MaxStepFrequency", 0.4],
+                ["StepHeight", 0.02],
+                ["TorsoWx", 0.0]
+            ])
+
+            # Основной шаг, заданный пользователем
+            self.motion.moveTo(x, y, theta)
+
+            self.onStopped()
+
+        except Exception as e:
+            print("[ERROR] {}".format(e))
+        finally:
+            self.bIsRunning = False
+
+    def onInput_onStop(self):
+        self.onUnload()
+        self.onStopped()]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
               <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-              <Output name="onArrivedAtDestination" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when the robot arrives at its destination." id="4" />
-              <Output name="onStoppedBeforeArriving" type="0" type_size="1" nature="1" inner="0" tooltip="Signal sent when the robot stops before arriving to its destination. Returns a vector [x (m), y (m), theta(rad)] with the remaining distance up to the destination. This distance is expressed in the ROBOT frame." id="5" />
-              <Parameter name="Distance X (m)" inherits_from_parent="0" content_type="2" value="1" default_value="0.2" min="-5" max="10" tooltip="The distance in meters for forward/backward motion. Positive value&#x0A;means forward, negative value means backward." id="6" />
-              <Parameter name="Distance Y (m)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-5" max="5" tooltip="The distance in meters for lateral motion. Positive value means left, negative&#x0A;value means right." id="7" />
-              <Parameter name="Theta (deg)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-180" max="180" tooltip="The orientation in degrees for final rotation. Positive value means anticlockwise,&#x0A;negative value means clockwise." id="8" />
-              <Parameter name="Arms movement enabled" inherits_from_parent="0" content_type="0" value="1" default_value="1" tooltip="Enables natural motion of the arms." id="9" />
-              <Resource name="Legs" type="Lock" timeout="0" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+              <Parameter name="Distance X (m)" inherits_from_parent="0" content_type="2" value="0.3" default_value="0.3" min="-1" max="1" tooltip="" id="5" />
+              <Parameter name="Distance Y (m)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-0.3" max="0.3" tooltip="" id="6" />
+              <Parameter name="Theta (deg)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-180" max="180" tooltip="" id="7" />
+              <Parameter name="Arms movement enabled" inherits_from_parent="0" content_type="0" value="1" default_value="1" tooltip="" id="8" />
             </Box>
-            <Link inputowner="12" indexofinput="2" outputowner="11" indexofoutput="4" />
-            <Link inputowner="39" indexofinput="2" outputowner="37" indexofoutput="4" />
-            <Link inputowner="38" indexofinput="2" outputowner="39" indexofoutput="4" />
+            <Box name="Confused" id="20" localization="8" tooltip="ID : #02C 0002&#x0A;&#x0A;===================&#x0A;&#x0A;Tags : &#x0A;- Confused" x="473" y="684">
+              <bitmap>media/images/box/movement/move.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+
+    def onLoad(self):
+        #put initialization code here
+        pass
+
+    def onUnload(self):
+        #put clean-up code here
+        pass
+
+    def onInput_onStart(self):
+        #self.onStopped() #activate the output of the box
+        pass
+
+    def onInput_onStop(self):
+        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
+        self.onStopped() #activate the output of the box]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this Input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this Input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when Box behavior is finished." id="4" />
+              <Timeline enable="1" fps="25" start_frame="1" end_frame="-1" size="65">
+                <ActuatorList model="nao">
+                  <ActuatorCurve name="value" actuator="HeadYaw" mute="0" unit="-1">
+                    <Key frame="25" value="2.72224" />
+                    <Key frame="45" value="-0.00240423" />
+                    <Key frame="65" value="5.71056" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="HeadPitch" mute="0" unit="-1">
+                    <Key frame="25" value="-30.8524" />
+                    <Key frame="45" value="-33.4013" />
+                    <Key frame="65" value="-30.4129" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LShoulderPitch" mute="0" unit="-1">
+                    <Key frame="23" value="69.8715" />
+                    <Key frame="43" value="73.7388" />
+                    <Key frame="63" value="75.4087" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LShoulderRoll" mute="0" unit="-1">
+                    <Key frame="23" value="0.498473" />
+                    <Key frame="43" value="3.51326" />
+                    <Key frame="63" value="2.89802" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LElbowYaw" mute="0" unit="-1">
+                    <Key frame="23" value="-28.3914" />
+                    <Key frame="43" value="-55.7258" />
+                    <Key frame="63" value="-68.7337" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LElbowRoll" mute="0" unit="-1">
+                    <Key frame="23" value="-46.4923" />
+                    <Key frame="43" value="-67.9379" />
+                    <Key frame="63" value="-61.0823" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LWristYaw" mute="0" unit="-1">
+                    <Key frame="43" value="-43" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LHand" mute="0" unit="-1">
+                    <Key frame="43" value="0.58" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RShoulderPitch" mute="0" unit="-1">
+                    <Key frame="21" value="76.3803" />
+                    <Key frame="41" value="73.8315" />
+                    <Key frame="61" value="83.148" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RShoulderRoll" mute="0" unit="-1">
+                    <Key frame="21" value="-0.529755" />
+                    <Key frame="41" value="-0.881321" />
+                    <Key frame="61" value="-0.969213" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RElbowYaw" mute="0" unit="-1">
+                    <Key frame="21" value="44.4708" />
+                    <Key frame="41" value="55.1936" />
+                    <Key frame="61" value="69.6078" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RElbowRoll" mute="0" unit="-1">
+                    <Key frame="21" value="69.8763" />
+                    <Key frame="41" value="79.896" />
+                    <Key frame="61" value="65.9212" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RWristYaw" mute="0" unit="-1">
+                    <Key frame="41" value="52" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RHand" mute="0" unit="-1">
+                    <Key frame="41" value="0.527273" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LHipYawPitch" mute="0" unit="-1">
+                    <Key frame="42" value="-27.9472" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LHipRoll" mute="0" unit="-1">
+                    <Key frame="42" value="1.40867" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LHipPitch" mute="0" unit="-1">
+                    <Key frame="42" value="-3.86483" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LKneePitch" mute="0" unit="-1">
+                    <Key frame="42" value="30.2323" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LAnklePitch" mute="0" unit="-1">
+                    <Key frame="42" value="-10.9889" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="LAnkleRoll" mute="0" unit="-1">
+                    <Key frame="42" value="0.178188" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RHipRoll" mute="0" unit="-1">
+                    <Key frame="42" value="1.49656" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RHipPitch" mute="0" unit="-1">
+                    <Key frame="42" value="-0.79343" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RKneePitch" mute="0" unit="-1">
+                    <Key frame="42" value="26.8973" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RAnklePitch" mute="0" unit="-1">
+                    <Key frame="42" value="-10.0173" />
+                  </ActuatorCurve>
+                  <ActuatorCurve name="value" actuator="RAnkleRoll" mute="0" unit="-1">
+                    <Key frame="42" value="-1.84332" />
+                  </ActuatorCurve>
+                </ActuatorList>
+              </Timeline>
+              <Resource name="Standing" type="Lock" timeout="1" />
+              <Resource name="All motors" type="Lock" timeout="1" />
+            </Box>
             <Link inputowner="36" indexofinput="2" outputowner="40" indexofoutput="3" />
             <Link inputowner="44" indexofinput="2" outputowner="42" indexofoutput="4" />
             <Link inputowner="45" indexofinput="2" outputowner="46" indexofoutput="3" />
@@ -995,17 +1376,23 @@ class MyClass(GeneratedClass):
             <Link inputowner="48" indexofinput="2" outputowner="49" indexofoutput="3" />
             <Link inputowner="49" indexofinput="2" outputowner="47" indexofoutput="4" />
             <Link inputowner="50" indexofinput="2" outputowner="48" indexofoutput="4" />
-            <Link inputowner="11" indexofinput="2" outputowner="0" indexofoutput="2" />
-            <Link inputowner="33" indexofinput="2" outputowner="12" indexofoutput="4" />
             <Link inputowner="2" indexofinput="2" outputowner="33" indexofoutput="4" />
-            <Link inputowner="37" indexofinput="2" outputowner="36" indexofoutput="4" />
             <Link inputowner="42" indexofinput="2" outputowner="43" indexofoutput="3" />
-            <Link inputowner="43" indexofinput="2" outputowner="38" indexofoutput="4" />
             <Link inputowner="1" indexofinput="2" outputowner="3" indexofoutput="3" />
             <Link inputowner="3" indexofinput="2" outputowner="50" indexofoutput="4" />
             <Link inputowner="4" indexofinput="2" outputowner="1" indexofoutput="4" />
-            <Link inputowner="5" indexofinput="2" outputowner="4" indexofoutput="4" />
-            <Link inputowner="6" indexofinput="2" outputowner="5" indexofoutput="4" />
+            <Link inputowner="9" indexofinput="2" outputowner="11" indexofoutput="4" />
+            <Link inputowner="33" indexofinput="2" outputowner="9" indexofoutput="4" />
+            <Link inputowner="7" indexofinput="2" outputowner="33" indexofoutput="4" />
+            <Link inputowner="39" indexofinput="2" outputowner="7" indexofoutput="4" />
+            <Link inputowner="40" indexofinput="2" outputowner="39" indexofoutput="4" />
+            <Link inputowner="8" indexofinput="2" outputowner="36" indexofoutput="4" />
+            <Link inputowner="43" indexofinput="2" outputowner="8" indexofoutput="4" />
+            <Link inputowner="5" indexofinput="2" outputowner="31" indexofoutput="4" />
+            <Link inputowner="0" indexofinput="4" outputowner="5" indexofoutput="4" />
+            <Link inputowner="11" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="20" indexofinput="2" outputowner="4" indexofoutput="4" />
+            <Link inputowner="31" indexofinput="2" outputowner="20" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>
