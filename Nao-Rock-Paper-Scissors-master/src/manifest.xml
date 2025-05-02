@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package version="0.0.0" installOnlyAtStartup="false" uuid="interaction_with_dash-9743be">
+<package installOnlyAtStartup="false" uuid="naorockpaperscissors-b0cac1" version="0.0.0">
  <names>
-  <name lang="en_US">Untitled</name>
+  <name lang="en_US">NaoRockPaperScissors</name>
  </names>
  <supportedLanguages>
   <language>en_US</language>
@@ -13,9 +13,12 @@
  </descriptionLanguages>
  <contents>
   <behaviorContent path="behavior_1">
-   <userRequestable/>
    <nature>interactive</nature>
    <permissions/>
   </behaviorContent>
+  <dialogContent topicName="Greeting" typeVersion="1.0">
+   <topic path="Greeting/Greeting_ged.top" language="de_DE"/>
+   <topic path="Greeting/Greeting_enu.top" language="en_US"/>
+  </dialogContent>
  </contents>
 </package>

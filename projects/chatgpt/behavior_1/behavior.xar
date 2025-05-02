@@ -90,7 +90,7 @@ except ImportError:
     from urllib2 import Request, urlopen
 
 AUDIO_FILE = "test.wav"
-api_key = "sk-None-laWX0ykdQcVfNwieDXjjT3BlbkFJV2ZEwPrDdGc1MJXnDR2X"
+api_key = "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"
 char_prompt = "Du bist ein humorvoller Chatbot in der Form eines Nao-Roboters für die Stadtteilbibliothek Buch in Berlin. Du informierst die Nutzer über Öffnungszeiten, Angebote und Veranstaltungen der Bibliothek und interagierst dabei auf witzige und charmante Weise. Öffnungszeiten: Montag: 13:00–19:00 Uhr; Dienstag: 10:00–16:00 Uhr; Mittwoch: 13:00–17:00 Uhr; Donnerstag: 13:00–19:00 Uhr; Freitag: 13:00–19:00 Uhr; Samstag: 10:00–15:00 Uhr. Angebote: Vielfältiges Medienangebot, darunter Bücher, Hörbücher, DVDs, fremdsprachige Bestände (Englisch, Polnisch, Arabisch, Persisch, Ukrainisch, Russisch, Türkisch, Spanisch), Zeitschriften, Spiele, Konsolenspiele (PlayStation 4, Nintendo Switch/DS/3DS), Tiptoi-Stifte und Bücher, Tolino eBook-Reader, Tonieboxen. Spezielle Angebote für Kinder und Jugendliche: Vermittlung von Medienkompetenz und Diversität durch Coding- und Robotikangebote (z.B. Dash und Dot, Bee Bots, Lego Education Sets), Gaming-Nachmittage mit Nintendo Switch, PlayStation 5, Gaming-Laptops und VR-Brillen. Veranstaltungen: Regelmäßige Events wie Bastelstation (jeden 1. und 3. Freitag des Monats, 15:30–16:30 Uhr), Bilderbuchkino, Senioren-Singen, Digital-Zebra (Digital-Beratung), Digital-Café, Frauen*-Workshops, Tabletkurse für Senioren, Human Library (mehrsprachig), Graffiti-Workshops für Jugendliche, Puppenbau-Workshops, Weihnachtsbasteln, Kindertheater, Spiele-Café (jeden 2. und 4. Mittwoch im Monat, 13:00–17:00 Uhr). Fahrradbibliothek: Von März bis Oktober unterwegs mit Riesenspielen und Medien zum Ausleihen, besucht verschiedene Orte in Buch, darunter Unterkünfte für Geflüchtete und die HOWOGE-Siedlung. Du nutzt diese Informationen, um den Nutzern auf humorvolle Weise weiterzuhelfen und sie über die Angebote der Bibliothek zu informieren."
 convo = [{"role": "system", "content": char_prompt}]
 
@@ -215,7 +215,7 @@ class MyClass(GeneratedClass):
         pass
 
     def onInput_onStart(self):
-        api_key = "sk-None-laWX0ykdQcVfNwieDXjjT3BlbkFJV2ZEwPrDdGc1MJXnDR2X"
+        api_key = "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"
         prompt = "Was ist die Haubtstadt von Deutschland?"
         channels = [0, 0, 1, 0]
 
@@ -239,7 +239,7 @@ class MyClass(GeneratedClass):
 
     def on_text_input(self, value):
         print("User said:", value)
-        response = call_chatgpt_api(value, "sk-None-laWX0ykdQcVfNwieDXjjT3BlbkFJV2ZEwPrDdGc1MJXnDR2X")
+        response = call_chatgpt_api(value, "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")
         print("ChatGPT Response:", response)
         self.speak(response)
 
@@ -248,10 +248,10 @@ class MyClass(GeneratedClass):
         self.audiorec.stopMicrophonesRecording();
         if self.recIsRunning == True:
             self.recIsRunning = False
-            self.logmanager.info("transcribing the audio file using openai")
+            #self.logmanager.info("transcribing the audio file using openai")
             text = transcribe_with_openai("/home/nao/test.wav", api_key)
             #self.say(text)
-            self.logmanager.info(text)
+            #self.logmanager.info(text)
             response = call_chatgpt_api(text, api_key)
             self.say(response)
             self.delete_audio("/home/nao/test.wav")
@@ -260,7 +260,7 @@ class MyClass(GeneratedClass):
         if self.recIsRunning == False:
             self.recIsRunning = True
             self.say("Stell mir eine Frage.")
-            self.logmanager.info("Stell mir eine Frage")
+            #self.logmanager.info("Stell mir eine Frage")
             time.sleep(2)
             channels = [0, 0, 1, 0]
             self.audiorec.startMicrophonesRecording("/home/nao/test.wav", "wav", 16000, channels)

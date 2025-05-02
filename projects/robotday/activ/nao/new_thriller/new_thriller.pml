@@ -7,6 +7,7 @@
     <Dialogs />
     <Resources>
         <File name="Thriller-music-mp3" src="new_thriller/Thriller-music-mp3.mp3" />
+        <File name="camera1" src="new_thriller/camera1.ogg" />
     </Resources>
     <Topics />
     <IgnoredPaths />

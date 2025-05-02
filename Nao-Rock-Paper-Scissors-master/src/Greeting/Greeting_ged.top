@@ -1,0 +1,9 @@
+topic: ~Greeting()
+language: ged
+
+u:(Hallo) Willlst du eine Runde Schere, Stein, Papier spielen?
+
+u:(Nein) Alles Klar, tippe einfach auf meinen Kopf wenn du spielen möchtest $wait=1
+
+u:(Ja) $play=1
+
