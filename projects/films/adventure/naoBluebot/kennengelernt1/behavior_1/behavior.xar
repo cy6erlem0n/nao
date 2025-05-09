@@ -160,12 +160,12 @@ class MyClass(GeneratedClass):
 		GeneratedClass.__init__(self)
 
 	def onInput_onStart(self):
-		self.onStopped("Warte mal....")]]>
+		self.onStopped("Warte mal")]]>
                 </content>
               </script>
               <pluginContent>
                 <text>
-                  <![CDATA[Warte mal....]]>
+                  <![CDATA[Warte mal]]>
                 </text>
               </pluginContent>
               <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
@@ -849,12 +849,12 @@ class MyClass(GeneratedClass):
 		GeneratedClass.__init__(self)
 
 	def onInput_onStart(self):
-		self.onStopped("Miiime")]]>
+		self.onStopped("Mime")]]>
                 </content>
               </script>
               <pluginContent>
                 <text>
-                  <![CDATA[Miiime]]>
+                  <![CDATA[Mime]]>
                 </text>
               </pluginContent>
               <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
@@ -1123,7 +1123,7 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Box name="OpenArmInFrontWithBump_01 (1)" id="11" localization="8" tooltip="ID : #01B 0005&#x0A;&#x0A;===================&#x0A;&#x0A;Tags : &#x0A;- You&#x0A;- Yourslef&#x0A;- Yours&#x0A;- Everybody&#x0A;&#x0A;===================&#x0A;&#x0A;Common dialog : No&#x0A;&#x0A;===================&#x0A;&#x0A;Start stance : Center&#x0A;End stance : Center" x="611" y="490">
+            <Box name="OpenArmInFrontWithBump_01 (1)" id="11" localization="8" tooltip="ID : #01B 0005&#x0A;&#x0A;===================&#x0A;&#x0A;Tags : &#x0A;- You&#x0A;- Yourslef&#x0A;- Yours&#x0A;- Everybody&#x0A;&#x0A;===================&#x0A;&#x0A;Common dialog : No&#x0A;&#x0A;===================&#x0A;&#x0A;Start stance : Center&#x0A;End stance : Center" x="524" y="481">
               <bitmap>media/images/box/movement/move.png</bitmap>
               <script language="4">
                 <content>
@@ -1522,85 +1522,6 @@ class MyClass(GeneratedClass):
               <Input name="onStart" type="1" type_size="1" nature="1" inner="0" tooltip="To send the text on the output." id="2" />
               <Output name="onStopped" type="3" type_size="1" nature="2" inner="0" tooltip="The text you entered." id="3" />
             </Box>
-            <Box name="Stand Up (1)" id="17" localization="8" tooltip="the robot tries to stand up from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="230" y="494">
-              <bitmap>media/images/box/movement/stand.png</bitmap>
-              <script language="4">
-                <content>
-                  <![CDATA[]]>
-                </content>
-              </script>
-              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-              <Output name="success" type="1" type_size="1" nature="1" inner="0" tooltip="Stimulated when the robot succeed in standing up." id="4" />
-              <Output name="failure" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when the robot failed to stand up after n tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." id="5" />
-              <Parameter name="Maximum of tries" inherits_from_parent="0" content_type="1" value="3" default_value="3" min="0" max="10" tooltip="The maximum number of fails of stand up before stimulating the failure output." id="6" />
-              <Timeline enable="0">
-                <BehaviorLayer name="StandUpBehavior">
-                  <BehaviorKeyframe name="DetectRobotPose" index="1">
-                    <Diagram>
-                      <Box name="Goto Posture" id="2" localization="8" tooltip="The robot goes from its current postition to the asked posture." x="331" y="92">
-                        <bitmap>media/images/box/box-diagram.png</bitmap>
-                        <script language="4">
-                          <content>
-                            <![CDATA[class MyClass(GeneratedClass):
-    def __init__(self):
-        GeneratedClass.__init__(self, False)
-
-    def onLoad(self):
-        self.nTries = 0
-        self.postureService = self.session().service("ALRobotPosture")
-        pass
-
-    def onUnload(self):
-        self.postureService.stopMove()
-
-    def onInput_onStart(self):
-        if(self.nTries != self.getParameter("Maximum of tries")):
-            self.nTries = self.getParameter("Maximum of tries")
-            self.postureService.setMaxTryNumber(self.nTries)
-
-        result = self.postureService.goToPosture(self.getParameter("Name"), self.getParameter("Speed (%)")/100.)
-        if(result):
-            self.success()
-        else:
-            self.failure()
-        pass
-
-    def onInput_onStop(self):
-        self.onUnload() #~ it is recommanded to call onUnload of this box in a onStop method, as the code written in onUnload is used to stop the box as well
-        pass]]>
-                          </content>
-                        </script>
-                        <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-                        <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-                        <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-                        <Output name="success" type="1" type_size="1" nature="1" inner="0" tooltip="Stimulated if the posture has been reached." id="4" />
-                        <Output name="failure" type="1" type_size="1" nature="1" inner="0" tooltip="Stimulated if the posture could not be reached." id="5" />
-                        <Parameter name="Name" inherits_from_parent="0" content_type="3" value="Stand" default_value="Stand" custom_choice="1" tooltip="Name of the posture to go to." id="6">
-                          <Choice value="Crouch" />
-                          <Choice value="LyingBack" />
-                          <Choice value="LyingBelly" />
-                          <Choice value="Sit" />
-                          <Choice value="SitRelax" />
-                          <Choice value="StandInit" />
-                          <Choice value="Stand" />
-                          <Choice value="StandZero" />
-                        </Parameter>
-                        <Parameter name="Speed (%)" inherits_from_parent="0" content_type="1" value="80" default_value="80" min="0" max="100" tooltip="Speed to go to the posture." id="7" />
-                        <Parameter name="Maximum of tries" inherits_from_parent="1" content_type="1" value="3" default_value="3" min="0" max="10" tooltip="The maximum number of fails of go to posture before stimulating the failure output." id="8" />
-                        <Resource name="All motors" type="Lock" timeout="0" />
-                        <Resource name="Stiffness" type="Lock" timeout="0" />
-                      </Box>
-                      <Link inputowner="2" indexofinput="2" outputowner="0" indexofoutput="2" />
-                      <Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" />
-                      <Link inputowner="0" indexofinput="5" outputowner="2" indexofoutput="5" />
-                    </Diagram>
-                  </BehaviorKeyframe>
-                </BehaviorLayer>
-              </Timeline>
-              <Resource name="All motors" type="Lock" timeout="0" />
-            </Box>
             <Box name="Wait (3)" id="21" localization="8" tooltip="Wait a moment before sending a signal on the output. &#x0A;Can be stopped anytime. &#x0A;Stimulating the input again before output is activated restarts the waiting period.&#x0A;" x="147" y="691">
               <bitmap>media/images/box/wait.png</bitmap>
               <script language="4">
@@ -1890,7 +1811,6 @@ class MyClass(GeneratedClass):
               <Resource name="Right eye leds" type="Lock" timeout="1" />
             </Box>
             <Link inputowner="3" indexofinput="2" outputowner="4" indexofoutput="3" />
-            <Link inputowner="7" indexofinput="2" outputowner="3" indexofoutput="4" />
             <Link inputowner="10" indexofinput="2" outputowner="8" indexofoutput="4" />
             <Link inputowner="6" indexofinput="2" outputowner="13" indexofoutput="3" />
             <Link inputowner="14" indexofinput="2" outputowner="15" indexofoutput="3" />
@@ -1904,8 +1824,6 @@ class MyClass(GeneratedClass):
             <Link inputowner="27" indexofinput="2" outputowner="28" indexofoutput="4" />
             <Link inputowner="30" indexofinput="2" outputowner="29" indexofoutput="4" />
             <Link inputowner="4" indexofinput="2" outputowner="12" indexofoutput="4" />
-            <Link inputowner="31" indexofinput="2" outputowner="1" indexofoutput="4" />
-            <Link inputowner="12" indexofinput="2" outputowner="31" indexofoutput="4" />
             <Link inputowner="2" indexofinput="2" outputowner="7" indexofoutput="4" />
             <Link inputowner="8" indexofinput="2" outputowner="2" indexofoutput="4" />
             <Link inputowner="5" indexofinput="2" outputowner="32" indexofoutput="3" />
@@ -1914,14 +1832,14 @@ class MyClass(GeneratedClass):
             <Link inputowner="24" indexofinput="2" outputowner="18" indexofoutput="4" />
             <Link inputowner="28" indexofinput="2" outputowner="22" indexofoutput="4" />
             <Link inputowner="9" indexofinput="2" outputowner="10" indexofoutput="4" />
-            <Link inputowner="17" indexofinput="2" outputowner="9" indexofoutput="4" />
-            <Link inputowner="32" indexofinput="2" outputowner="17" indexofoutput="4" />
-            <Link inputowner="11" indexofinput="2" outputowner="17" indexofoutput="4" />
             <Link inputowner="21" indexofinput="2" outputowner="11" indexofoutput="4" />
-            <Link inputowner="13" indexofinput="2" outputowner="21" indexofoutput="4" />
-            <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
-            <Link inputowner="25" indexofinput="2" outputowner="26" indexofoutput="4" />
-            <Link inputowner="29" indexofinput="2" outputowner="25" indexofoutput="4" />
+            <Link inputowner="12" indexofinput="2" outputowner="31" indexofoutput="4" />
+            <Link inputowner="32" indexofinput="2" outputowner="9" indexofoutput="4" />
+            <Link inputowner="11" indexofinput="2" outputowner="9" indexofoutput="4" />
+            <Link inputowner="2" indexofinput="2" outputowner="1" indexofoutput="4" />
+            <Link inputowner="25" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="27" indexofinput="2" outputowner="25" indexofoutput="4" />
+            <Link inputowner="29" indexofinput="2" outputowner="26" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

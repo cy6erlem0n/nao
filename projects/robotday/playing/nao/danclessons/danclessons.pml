@@ -7,6 +7,8 @@
     <Dialogs />
     <Resources>
         <File name="mikhael-landscape-paisaje" src="behavior_1/sounds/mikhael-landscape-paisaje.ogg" />
+        <File name="swiftswords_ext" src="behavior_1/swiftswords_ext.mp3" />
+        <File name="taichimove" src="behavior_1/taichimove.pmt" />
     </Resources>
     <Topics />
     <IgnoredPaths />
