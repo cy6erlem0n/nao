@@ -702,7 +702,7 @@ class MyClass(GeneratedClass):
               <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="5" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
               <Parameter name="Trigger timerOutput if cancelled" inherits_from_parent="0" content_type="0" value="0" default_value="1" tooltip="If the box is currently waiting and cancelled, output will be stimulated." id="6" />
             </Box>
-            <Box name="move" id="1" localization="8" tooltip="moved and turn" x="230" y="32">
+            <Box name="move" id="1" localization="8" tooltip="moved and turn" x="234" y="26">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -1147,7 +1147,8 @@ class MyClass(GeneratedClass):
             <Link inputowner="40" indexofinput="2" outputowner="2" indexofoutput="4" />
             <Link inputowner="3" indexofinput="2" outputowner="50" indexofoutput="4" />
             <Link inputowner="0" indexofinput="4" outputowner="3" indexofoutput="4" />
-            <Link inputowner="37" indexofinput="2" outputowner="11" indexofoutput="4" />
+            <Link inputowner="1" indexofinput="2" outputowner="11" indexofoutput="4" />
+            <Link inputowner="37" indexofinput="2" outputowner="1" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

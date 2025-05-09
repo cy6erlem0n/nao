@@ -276,7 +276,7 @@ class MyClass(GeneratedClass):
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
             </Box>
-            <Box name="Stand Up" id="3" localization="8" tooltip="the robot tries to stand up from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="244" y="275">
+            <Box name="Stand Up" id="3" localization="8" tooltip="the robot tries to stand up from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="135" y="49">
               <bitmap>media/images/box/movement/stand.png</bitmap>
               <script language="4">
                 <content>
@@ -355,7 +355,7 @@ class MyClass(GeneratedClass):
               </Timeline>
               <Resource name="All motors" type="Lock" timeout="0" />
             </Box>
-            <Box name="Sit Down" id="4" localization="8" tooltip="the robot tries to sit down from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="89" y="170">
+            <Box name="Sit Down" id="4" localization="8" tooltip="the robot tries to sit down from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="56" y="202">
               <bitmap>media/images/box/movement/sit_ground.png</bitmap>
               <script language="4">
                 <content>
@@ -429,9 +429,10 @@ class MyClass(GeneratedClass):
             </Box>
             <Link inputowner="0" indexofinput="7" outputowner="1" indexofoutput="4" />
             <Link inputowner="1" indexofinput="2" outputowner="2" indexofoutput="4" />
-            <Link inputowner="0" indexofinput="7" outputowner="3" indexofoutput="4" />
             <Link inputowner="0" indexofinput="7" outputowner="4" indexofoutput="4" />
-            <Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="4" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="6" />
+            <Link inputowner="2" indexofinput="2" outputowner="3" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

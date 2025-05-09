@@ -15,7 +15,7 @@
       <BehaviorLayer name="behavior_layer1">
         <BehaviorKeyframe name="keyframe1" index="1">
           <Diagram>
-            <Box name="Stand Up" id="1" localization="8" tooltip="the robot tries to stand up from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="177" y="17">
+            <Box name="Stand Up" id="1" localization="8" tooltip="the robot tries to stand up from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="184" y="20">
               <bitmap>media/images/box/movement/stand.png</bitmap>
               <script language="4">
                 <content>
@@ -774,7 +774,7 @@ class MyClass(GeneratedClass):
               <Parameter name="Theta (deg)" inherits_from_parent="0" content_type="2" value="-180" default_value="0" min="-180" max="180" tooltip="" id="7" />
               <Parameter name="Arms movement enabled" inherits_from_parent="0" content_type="0" value="1" default_value="1" tooltip="" id="8" />
             </Box>
-            <Box name="move (2)" id="3" localization="8" tooltip="moved and turn" x="280" y="190">
+            <Box name="move (2)" id="3" localization="8" tooltip="moved and turn" x="277" y="210">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -874,7 +874,7 @@ class MyClass(GeneratedClass):
               <Parameter name="Theta (deg)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-180" max="180" tooltip="" id="7" />
               <Parameter name="Arms movement enabled" inherits_from_parent="0" content_type="0" value="1" default_value="1" tooltip="" id="8" />
             </Box>
-            <Box name="Sit Down" id="4" localization="8" tooltip="the robot tries to sit down from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="61" y="311">
+            <Box name="Sit Down" id="4" localization="8" tooltip="the robot tries to sit down from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="54" y="330">
               <bitmap>media/images/box/movement/sit_ground.png</bitmap>
               <script language="4">
                 <content>
@@ -950,7 +950,8 @@ class MyClass(GeneratedClass):
             <Link inputowner="30" indexofinput="2" outputowner="3" indexofoutput="4" />
             <Link inputowner="0" indexofinput="4" outputowner="30" indexofoutput="4" />
             <Link inputowner="21" indexofinput="2" outputowner="1" indexofoutput="4" />
-            <Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="3" indexofinput="2" outputowner="2" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

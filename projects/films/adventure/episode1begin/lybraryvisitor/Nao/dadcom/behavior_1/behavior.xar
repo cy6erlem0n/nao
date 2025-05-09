@@ -16,7 +16,7 @@
       <BehaviorLayer name="behavior_layer1">
         <BehaviorKeyframe name="keyframe1" index="1">
           <Diagram scale="84.0896">
-            <Box name="fingers" id="1" localization="8" tooltip="nao  points to dashs" x="101" y="347">
+            <Box name="fingers" id="1" localization="8" tooltip="nao  points to dashs" x="105" y="348">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -842,7 +842,7 @@ class MyClass(GeneratedClass):
               </Parameter>
               <Resource name="Speech" type="Lock" timeout="0" />
             </Box>
-            <Box name="Sit Down" id="17" localization="8" tooltip="the robot tries to sit down from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="744" y="52">
+            <Box name="Sit Down" id="17" localization="8" tooltip="the robot tries to sit down from any position for a number of tries.&#x0A;&#x0A;Note: The number of tries can be set in parameters." x="765" y="12">
               <bitmap>media/images/box/movement/sit_ground.png</bitmap>
               <script language="4">
                 <content>
@@ -928,7 +928,14 @@ class MyClass(GeneratedClass):
             <Link inputowner="11" indexofinput="2" outputowner="18" indexofoutput="4" />
             <Link inputowner="5" indexofinput="2" outputowner="9" indexofoutput="3" />
             <Link inputowner="9" indexofinput="2" outputowner="7" indexofoutput="4" />
-            <Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="7" indexofinput="2" outputowner="0" indexofoutput="4" />
+            <Link inputowner="17" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="8" indexofinput="3" outputowner="5" indexofoutput="4" />
+            <Link inputowner="8" indexofinput="2" outputowner="7" indexofoutput="4" />
+            <Link inputowner="6" indexofinput="3" outputowner="1" indexofoutput="4" />
+            <Link inputowner="6" indexofinput="2" outputowner="13" indexofoutput="4" />
+            <Link inputowner="4" indexofinput="3" outputowner="2" indexofoutput="4" />
+            <Link inputowner="4" indexofinput="2" outputowner="14" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>

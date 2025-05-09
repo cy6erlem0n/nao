@@ -234,7 +234,7 @@ class MyClass(GeneratedClass):
               </Parameter>
               <Resource name="Speech" type="Lock" timeout="0" />
             </Box>
-            <Box name="Wait" id="7" localization="8" tooltip="Wait a moment before sending a signal on the output. &#x0A;Can be stopped anytime. &#x0A;Stimulating the input again before output is activated restarts the waiting period.&#x0A;" x="766" y="154">
+            <Box name="Wait" id="7" localization="8" tooltip="Wait a moment before sending a signal on the output. &#x0A;Can be stopped anytime. &#x0A;Stimulating the input again before output is activated restarts the waiting period.&#x0A;" x="919" y="179">
               <bitmap>media/images/box/wait.png</bitmap>
               <script language="4">
                 <content>
@@ -963,7 +963,7 @@ class MyClass(GeneratedClass):
               </Parameter>
               <Resource name="Speech" type="Lock" timeout="0" />
             </Box>
-            <Box name="Text Edit (5)" id="27" localization="8" tooltip="Send the text you entered when the input is stimulated." plugin="textedit_plugin" x="349" y="1307">
+            <Box name="Text Edit (5)" id="27" localization="8" tooltip="Send the text you entered when the input is stimulated." plugin="textedit_plugin" x="336" y="1302">
               <bitmap>media/images/box/interaction/vocabulary.png</bitmap>
               <script language="4">
                 <content>
@@ -1344,7 +1344,7 @@ class MyClass(GeneratedClass):
               <Parameter name="Theta (deg)" inherits_from_parent="0" content_type="2" value="0" default_value="0" min="-180" max="180" tooltip="" id="7" />
               <Parameter name="Arms movement enabled" inherits_from_parent="0" content_type="0" value="1" default_value="1" tooltip="" id="8" />
             </Box>
-            <Box name="move (1)" id="2" localization="8" tooltip="moved and turn" x="509" y="222">
+            <Box name="move (1)" id="2" localization="8" tooltip="moved and turn" x="613" y="207">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -1562,7 +1562,7 @@ class MyClass(GeneratedClass):
               <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="2" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
               <Parameter name="Trigger timerOutput if cancelled" inherits_from_parent="0" content_type="0" value="0" default_value="1" tooltip="If the box is currently waiting and cancelled, output will be stimulated." id="6" />
             </Box>
-            <Box name="Happy" id="25" localization="8" tooltip="ID : #02A 0001&#x0A;&#x0A;===================&#x0A;&#x0A;Tags : &#x0A;- Happy" x="188" y="1443">
+            <Box name="Happy" id="25" localization="8" tooltip="ID : #02A 0001&#x0A;&#x0A;===================&#x0A;&#x0A;Tags : &#x0A;- Happy" x="144" y="1440">
               <bitmap>media/images/box/movement/move.png</bitmap>
               <script language="4">
                 <content>
@@ -1836,10 +1836,12 @@ class MyClass(GeneratedClass):
             <Link inputowner="12" indexofinput="2" outputowner="31" indexofoutput="4" />
             <Link inputowner="32" indexofinput="2" outputowner="9" indexofoutput="4" />
             <Link inputowner="11" indexofinput="2" outputowner="9" indexofoutput="4" />
-            <Link inputowner="2" indexofinput="2" outputowner="1" indexofoutput="4" />
-            <Link inputowner="25" indexofinput="2" outputowner="0" indexofoutput="2" />
-            <Link inputowner="27" indexofinput="2" outputowner="25" indexofoutput="4" />
-            <Link inputowner="29" indexofinput="2" outputowner="26" indexofoutput="4" />
+            <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="31" indexofinput="2" outputowner="1" indexofoutput="4" />
+            <Link inputowner="7" indexofinput="2" outputowner="3" indexofoutput="4" />
+            <Link inputowner="13" indexofinput="2" outputowner="21" indexofoutput="4" />
+            <Link inputowner="29" indexofinput="2" outputowner="25" indexofoutput="4" />
+            <Link inputowner="25" indexofinput="2" outputowner="26" indexofoutput="4" />
           </Diagram>
         </BehaviorKeyframe>
       </BehaviorLayer>
