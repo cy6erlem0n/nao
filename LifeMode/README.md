@@ -1,0 +1,1 @@
+# Here you will find scripts or templates for your LifeModul Nao.

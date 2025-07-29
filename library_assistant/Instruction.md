@@ -1,0 +1,1 @@
+# Here you will find scripts and templates for the robot's behavior as a library assistant

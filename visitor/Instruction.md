@@ -1,0 +1,1 @@
+# Here are scripts or templates for imitating Nao as a visitor.
