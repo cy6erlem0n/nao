@@ -15,7 +15,7 @@
       <BehaviorLayer name="behavior_layer1">
         <BehaviorKeyframe name="keyframe1" index="1">
           <Diagram>
-            <Box name="Python Script" id="1" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="225" y="51">
+            <Box name=" narrator_main" id="1" localization="8" tooltip="This block activates the robot when the robot tells stories. The parameters of the story are set in the block." x="225" y="51">
               <bitmap>media/images/box/box-python-script.png</bitmap>
               <script language="4">
                 <content>
@@ -34,6 +34,9 @@ class MyClass(GeneratedClass):
         self.memory = None
         self.running = False
         self.touch_event = "Device/SubDeviceList/Head/Touch/Middle/Sensor/Value"
+        self.pause_min = 8
+        self.pause_max = 12
+
         self.stories = [
             {
                 "title": "Die kleine Glühwürmchen",
@@ -133,6 +136,8 @@ class MyClass(GeneratedClass):
         self.running = True
 
         try:
+            self.pause_min = int(self.getParameter("PauseMin (minutes)"))
+            self.pause_max = int(self.getParameter("PauseMax (minutes)"))
             self.logger.info("Storytelling", "Starting storytelling mode.")
             self.life.setState("solitary")  # Отключаем реакции
             self.posture.goToPosture("Stand", 0.5)  # Встаем в стартовую позу
@@ -148,7 +153,7 @@ class MyClass(GeneratedClass):
                     self.speech.say(animated_text)
 
                 # Ожидание перед следующей сказкой
-                wait_time = random.randint(1) * 60  # Минуты → секунды
+                wait_time = random.randint(self.pause_min, self.pause_max) * 60  # Минуты → секунды
                 self.logger.info("Storytelling", "Waiting {} minutes before next story.".format(wait_time // 60))
 
                 for _ in range(wait_time // 10):
@@ -181,6 +186,8 @@ class MyClass(GeneratedClass):
               <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
               <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
               <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+              <Parameter name="PauseMin (minutes) " inherits_from_parent="0" content_type="2" value="8" default_value="8" min="0" max="60" tooltip="" id="5" />
+              <Parameter name="PauseMax (minutes)" inherits_from_parent="0" content_type="2" value="12" default_value="12" min="0" max="60" tooltip="" id="6" />
             </Box>
             <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
             <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" />
