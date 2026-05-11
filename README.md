@@ -23,6 +23,9 @@ This work was part of my role in **digital education and robotics programming** 
 
 In addition to regular workshops, I developed scripts that allowed NAO to perform in a **narrative setting** — blending robotics and theater in a unique educational format.
 
+Some of the scripts were used in the next series
+https://youtube.com/playlist?list=PL1PibDcNIV9zLt84quf7dK5zSb3ZC0EGR&si=7fdrk_j8s_uTCpaj
+
 ---
 
 ## ⚠️ Disclaimer
